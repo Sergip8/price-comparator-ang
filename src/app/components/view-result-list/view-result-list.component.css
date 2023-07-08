@@ -1,0 +1,21 @@
+.results{
+    max-width: 95%;
+   
+}
+.card-list{
+    
+    align-items: center;
+   min-height: fit-content;
+   border-top: 1px solid #ccc;
+}
+h2{
+    margin-top: 2rem;
+}
+span{
+    margin-left: 1.5rem;
+    
+
+}
+.next{
+    cursor: pointer;
+}

@@ -1,0 +1,44 @@
+.menu{
+    padding-bottom: 50px;
+    padding-top: 20px;
+    border-right: 1px solid #ccc;
+    background-color: #fff;
+    z-index: 10;
+
+}
+.submenu_container{
+    z-index: 10;
+
+}
+.submenu{
+    padding-top: 20px;
+    padding-left: 10px;
+    background-color: #ffffff;
+    
+}
+
+.menu_items{
+    padding: 2px 30px 2px 5px;
+}
+.menu_items:hover{
+    background-color: aquamarine;
+    cursor: pointer;
+}
+.submenu_items{
+    cursor: pointer;
+    font-size: 13px;
+    padding: 2px 30px 2px 5px;
+}
+.submenu_items:hover{
+    text-decoration: underline;
+}
+.list{
+    width: 70%;
+}
+h6{
+    padding-top: 6px;
+}
+.select{
+    background-color: aquamarine;
+}
+

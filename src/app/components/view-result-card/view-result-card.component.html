@@ -1,0 +1,10 @@
+
+<a [href]="baseUrl+ data.link" class="card">
+    <img [src]="data.image" width="50px" height="200px"  class="card-img-top" alt="...">
+    <div class="card-body">
+      <h5 class="card-title">{{data.productName}}</h5>
+      <h6 class="card-title">{{data.price | currency:'COP':'$ '}}</h6>
+      <p class="card-text">{{data.brand}}</p>
+      <p *ngIf="data.store_name">{{data.store_name}}</p>
+    </div>
+</a>

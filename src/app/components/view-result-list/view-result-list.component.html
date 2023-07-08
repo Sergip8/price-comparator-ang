@@ -1,0 +1,72 @@
+<div class="">
+   
+    <search-bar (search_query)="search($event)" (category)="getCategory($event)"></search-bar>
+
+</div>
+<div class="container">
+    
+    <div class="results "  *ngIf="res && searchCategory=='mer'">
+        <h2>Exito</h2>
+        <div class="card-list d-flex" >
+            <view-result-card *ngFor="let exito of res.exito" [data]="exito" [baseUrl]="'https://www.exito.com/'"></view-result-card>
+            <div class="d-flex next" (click)="nextPage('exito')">
+                <div>mas</div>
+                <div>
+                    <img src="../../assets/icons/arrow-right.svg" alt="mas resultados">
+                </div>
+            </div>
+        </div>
+        <h2>D1</h2>
+        <div class="card-list d-flex" >
+    
+            <view-result-card *ngFor="let d1 of res.d1" [data]="d1" [baseUrl]="'https://domicilios.tiendasd1.com/p/'"></view-result-card>
+            <div class="d-flex next" (click)="nextPage('d1')">
+                <div>mas</div>
+                <div>
+                    <img src="../../assets/icons/arrow-right.svg" alt="mas resultados">
+                </div>
+            </div>
+        </div>
+        <h2>Olimpica</h2>
+        <div class="card-list d-flex" >
+    
+            <view-result-card *ngFor="let olimpica of res.olimpica" [data]="olimpica" [baseUrl]="'https://www.olimpica.com/'"></view-result-card>
+            <div class="d-flex next" (click)="nextPage('olimpica')">
+                <div>mas</div>
+                <div>
+                    <img src="../../assets/icons/arrow-right.svg" alt="mas resultados">
+                </div>
+            </div>
+        </div>
+        <h2>Jumbo</h2>
+        <div class="card-list d-flex" >
+    
+            <view-result-card *ngFor="let jumbo of res.jumbo" [data]="jumbo" [baseUrl]="'https://www.tiendasjumbo.co/'"></view-result-card>
+            <div class="d-flex next" (click)="nextPage('jumbo')">
+                <div>mas</div>
+                <div>
+                    <img src="../../assets/icons/arrow-right.svg" alt="mas resultados">
+                </div>
+            </div>
+        </div>
+        <h2>Carulla</h2>
+        <div class="card-list d-flex" >
+    
+            <view-result-card *ngFor="let carulla of res.carulla" [data]="carulla" [baseUrl]="'https://www.carulla.com/'"></view-result-card>
+            <div class="d-flex next" (click)="nextPage('carulla')">
+                <div>mas</div>
+                <div>
+                    <img src="../../assets/icons/arrow-right.svg" alt="mas resultados">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="tecRes && searchCategory=='tec'" class="mt-4">
+        <div class="card-list row" >
+    
+            <view-result-card class="col-2" *ngFor="let result of tecRes.resultRes" [data]="result"></view-result-card>
+            
+        </div>
+    
+    </div>
+</div>

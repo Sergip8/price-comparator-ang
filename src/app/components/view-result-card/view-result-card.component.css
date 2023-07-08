@@ -1,0 +1,9 @@
+a{
+    text-decoration: none;
+}
+.card{
+    margin-right: 20px;
+   z-index: 1;
+    width: 14rem;
+    border: none;
+}
