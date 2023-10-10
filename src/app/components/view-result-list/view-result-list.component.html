@@ -1,72 +1,36 @@
-<div class="">
-   
-    <search-bar (search_query)="search($event)" (category)="getCategory($event)"></search-bar>
 
-</div>
-<div class="container">
-    
-    <div class="results "  *ngIf="res && searchCategory=='mer'">
-        <h2>Exito</h2>
-        <div class="card-list d-flex" >
-            <view-result-card *ngFor="let exito of res.exito" [data]="exito" [baseUrl]="'https://www.exito.com/'"></view-result-card>
-            <div class="d-flex next" (click)="nextPage('exito')">
-                <div>mas</div>
-                <div>
-                    <img src="../../assets/icons/arrow-right.svg" alt="mas resultados">
-                </div>
-            </div>
-        </div>
-        <h2>D1</h2>
-        <div class="card-list d-flex" >
-    
-            <view-result-card *ngFor="let d1 of res.d1" [data]="d1" [baseUrl]="'https://domicilios.tiendasd1.com/p/'"></view-result-card>
-            <div class="d-flex next" (click)="nextPage('d1')">
-                <div>mas</div>
-                <div>
-                    <img src="../../assets/icons/arrow-right.svg" alt="mas resultados">
-                </div>
-            </div>
-        </div>
-        <h2>Olimpica</h2>
-        <div class="card-list d-flex" >
-    
-            <view-result-card *ngFor="let olimpica of res.olimpica" [data]="olimpica" [baseUrl]="'https://www.olimpica.com/'"></view-result-card>
-            <div class="d-flex next" (click)="nextPage('olimpica')">
-                <div>mas</div>
-                <div>
-                    <img src="../../assets/icons/arrow-right.svg" alt="mas resultados">
-                </div>
-            </div>
-        </div>
-        <h2>Jumbo</h2>
-        <div class="card-list d-flex" >
-    
-            <view-result-card *ngFor="let jumbo of res.jumbo" [data]="jumbo" [baseUrl]="'https://www.tiendasjumbo.co/'"></view-result-card>
-            <div class="d-flex next" (click)="nextPage('jumbo')">
-                <div>mas</div>
-                <div>
-                    <img src="../../assets/icons/arrow-right.svg" alt="mas resultados">
-                </div>
-            </div>
-        </div>
-        <h2>Carulla</h2>
-        <div class="card-list d-flex" >
-    
-            <view-result-card *ngFor="let carulla of res.carulla" [data]="carulla" [baseUrl]="'https://www.carulla.com/'"></view-result-card>
-            <div class="d-flex next" (click)="nextPage('carulla')">
-                <div>mas</div>
-                <div>
-                    <img src="../../assets/icons/arrow-right.svg" alt="mas resultados">
-                </div>
-            </div>
-        </div>
+<div class="container ">
+    <div>
+        <app-menu-filter (priceRange)="onPriceRange()"></app-menu-filter>
     </div>
-    <div *ngIf="tecRes && searchCategory=='tec'" class="mt-4">
-        <div class="card-list row" >
-    
-            <view-result-card class="col-2" *ngFor="let result of tecRes.resultRes" [data]="result"></view-result-card>
+    <!-- <div class="sidebar">
+        <div class="categories">
+            <h4>Categorias</h4>
+            <loading [loading]="loading && categories.length == 0"></loading>
+            <app-categories-menu-list [categories]="categories" (cat)="catSelected($event)"></app-categories-menu-list>
+        </div>
+        <div class="mt-2 class brands">
+            <h4>Marcas</h4>
+          <loading [loading]="loading && brands.length == 0"></loading>
+            <app-brands-menu-list [brands]="brands" (brand)="brandList($event)"></app-brands-menu-list>
+        </div>
+        <div *ngIf="tecRes && priceRange" class="price-slider">
+            <app-price-slide (selectedPriceRange)="getPriceRange($event)" [setPriceRange]="priceRange"></app-price-slide>
+        </div>
+
+    </div> -->
+    <div class="card-list-container"  >
+
+        <loading [loading]="loading && tecRes.length == 0"></loading>
+        <div *ngIf="tecRes" class="mt-4">
+            <div class="card-list" #productHeight ScrollNearEnd (nearEnd)="onNearEndScroll()">
+               
+                
+        
+                <view-result-card  class="cards" *ngFor="let result of tecRes" [data]="result" [baseUrl]="result.url"></view-result-card>
+            </div>
             
         </div>
-    
     </div>
+    <!-- <div >{{productHeight.offsetHeight}}</div> -->
 </div>

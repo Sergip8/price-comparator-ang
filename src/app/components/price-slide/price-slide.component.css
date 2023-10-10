@@ -1,0 +1,21 @@
+.price-slider{
+  
+  --mdc-slider-handle-color: rgb(134, 156, 255);
+  --mdc-slider-active-track-color: rgb(207, 207, 207);
+  --mdc-slider-inactive-track-color: rgb(221, 221, 221);
+  --mdc-slider-active-track-height: 10px;
+  
+  --mdc-slider-inactive-track-height: 10px;
+  --mdc-slider-handle-height: 15px;
+  --mdc-slider-handle-width: 15px;
+  --mdc-slider-inactive-track-shape: 10px;
+  width: 92%;
+  
+}
+.price-value-slider{
+  font-size: 10px;
+}
+.prices{
+  display: flex;
+  justify-content: space-between;
+}

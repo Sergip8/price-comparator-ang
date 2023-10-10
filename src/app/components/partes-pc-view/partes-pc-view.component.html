@@ -1,0 +1,20 @@
+
+<div class="partes-list-container " >
+    <div *ngFor="let p of partesPcRes let i = index" class="d-flex  list-container">
+        <a [href]="p.url" class="store-img">
+            
+            <img width="150px"  height="90px" src="../../../assets/img/{{p.store}}.png">
+            
+        </a>
+        <div *ngIf="p.data.length>0 " class="partes-list text-center d-flex align-items-center ">
+
+            <app-partes-pc-list [class]="'item'+i" *ngFor="let data of p.data let i = index"  [partesPc]="data"></app-partes-pc-list>
+            <div *ngIf="p.data.length>=size">
+                <button (click)="nextPage(p, i)"><span>&rarr;</span>mas</button>
+
+            </div>
+            
+        </div>
+        </div>
+
+</div>

@@ -5,8 +5,8 @@ import { FormControl } from "@angular/forms";
 @Component({
     selector: 'search-bar-result',
     template:`
-    <div class="row justify-content-around align-items-center mt-3">
-       <div class="options" *ngFor="let r of query" (click)="selected(r)">
+    <div *ngIf="query.length>0" class="row justify-content-around align-items-center mt-3">
+       <div class="options" *ngFor="let r of query" (click)="[selected(r), query = []]">
         {{r}}
        </div>
 

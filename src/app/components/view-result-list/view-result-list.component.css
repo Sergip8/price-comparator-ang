@@ -1,12 +1,68 @@
-.results{
-    max-width: 95%;
-   
+
+.container{
+    display: grid;
+    grid-template-columns: 0.2fr 0.8fr;
+}
+.sidebar{
+    margin-top: 200px;
+    background-color: #fff;
+    
+    margin-right: 10px;
+    height: fit-content;
+    border-radius: 5px;   
+}
+.card-list-container{
+    margin-top: 100px;
+}
+.brands{
+    
+    padding: 15px;
+    
+}
+.cards{
+    width: 170px;
+     height: 330px; 
+}
+
+.categories{
+    
+    padding: 15px;
 }
 .card-list{
-    
-    align-items: center;
-   min-height: fit-content;
-   border-top: 1px solid #ccc;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+}
+@media screen and (max-width: 1200px) {
+    .card-list{
+       
+        grid-template-columns: repeat(5, 1fr) ;
+    }
+}
+@media screen and (max-width: 1000px) {
+    .card-list{
+       
+        grid-template-columns: repeat(4, 1fr) ;
+    }
+}
+@media screen and (max-width: 860px) {
+    .card-list{
+       
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media screen and (max-width: 670px) {
+    .card-list{
+       
+        grid-template-columns: 1fr  1fr ;
+    }
+    .container{
+        display: inline;
+    }
+    .sidebar{ width: 100%;}
+}
+.price-slider{
+    margin-top: 50px;
+    padding: 15px;
 }
 h2{
     margin-top: 2rem;
@@ -18,4 +74,9 @@ span{
 }
 .next{
     cursor: pointer;
+}
+
+view-result-card{
+    padding: 5px;
+    
 }

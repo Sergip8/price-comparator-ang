@@ -1,0 +1,17 @@
+.brands{
+    height: 300px;
+    overflow-y: scroll; 
+}
+li{
+    list-style: none;
+}
+.brand:hover{
+    background-color: rgb(248, 252, 255);
+}
+.brand{
+    display: flex;
+    align-items: center;
+    padding-left: 6px;
+    font-size: 12px;
+    
+}

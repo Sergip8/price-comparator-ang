@@ -7,4 +7,5 @@ export interface BasicData{
     price: number;
     category: string;
     store_name: string
+    url: string
 }

@@ -1,0 +1,19 @@
+<div>
+    <div class="results "  *ngIf="mercadoReq">
+        
+        <div  *ngFor="let mer of mercadoReq let i = index">
+            <h2 *ngIf="mer.data.length >0">{{mer.store}}</h2>
+            <div class="card-list d-flex" *ngIf="mer.data.length >0">
+
+                   <view-result-card  *ngFor="let data of mer.data" [data]="data" [baseUrl]="mer.url" [styles]="styles"></view-result-card>
+                   <div class="d-flex next" (click)="nextPage(mer, i)">
+                       <div>mas</div>
+                       <div>
+                           <img src="../../assets/icons/arrow-right.svg" alt="mas resultados">
+                       </div>
+                   </div>
+            </div>
+        </div>
+        
+    </div>
+</div>

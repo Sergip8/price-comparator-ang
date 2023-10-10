@@ -1,0 +1,11 @@
+<div class="main-container " *ngIf="partesPc">
+    <div class="product-list-container">
+       
+        <div class="item" >
+            <li class="product-name">{{partesPc.name.slice(0,50)}}</li>
+            <li class="product-price">{{partesPc.price | currency:'COP':'$ '}}</li>
+
+        </div>
+        
+    </div>
+</div>

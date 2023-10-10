@@ -1,0 +1,28 @@
+.sidebar{
+    margin-top: 200px;
+    background-color: #fff;
+    
+    margin-right: 10px;
+    height: fit-content;
+    border-radius: 5px;   
+}
+
+.brands{
+    
+    padding: 15px;
+    height: 300px;
+    overflow-y: scroll; 
+ 
+}
+
+.categories{
+ 
+    padding: 15px;
+}
+.brand{
+    display: flex;
+    align-items: center;
+    padding-left: 6px;
+    font-size: 12px;
+    
+}

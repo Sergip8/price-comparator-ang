@@ -1,1 +1,28 @@
-<p>menu-filter works!</p>
+<div class="sidebar">
+    <div class="categories">
+        <h4>Categorias</h4>
+        <loading [loading]="loading && categories.length == 0"></loading>
+        <div *ngFor="let c of categories">
+            <app-categories-menu-list [category]="c" (cat)="catSelected($event)"></app-categories-menu-list>
+
+        </div>
+    </div>
+    <div class="mt-2 class brands">
+        <h4>Marcas</h4>
+      <loading [loading]="loading && brands.length == 0"></loading>
+      <div *ngFor="let b of brands; index as i" class="d-flex">
+        <div>
+            <input #brandInput [checked]="brandFilter.brandsSelected.value.includes(b)" (click)="brandSelected(b, i)" type="checkbox">
+        </div>
+        <div class="brand" (click)="brandSelected(b, i)" type="button">
+            &nbsp;{{b}}</div> 
+
+          <!-- <app-brands-menu-list [brand]="b.key" (brandRes)="brandList($event)" class="d-flex"></app-brands-menu-list> -->
+      </div>
+    </div>
+    <div>
+        <app-price-slide (selectedPriceRange)="priceRange.emit()"></app-price-slide>
+    </div>
+   
+
+</div>

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from "@angular/core";
+import { Router } from "@angular/router";
 import { MenuService } from "src/app/service/menu-service";
 
 
@@ -12,7 +13,7 @@ import { MenuService } from "src/app/service/menu-service";
     selected = ""
     menu!: any
     @Output() categories = new EventEmitter<string>()
-constructor(private service: MenuService){
+constructor(private service: MenuService, private router: Router){
     this.menu = service.getMainMenu()
 }
 
@@ -24,6 +25,10 @@ constructor(private service: MenuService){
         console.log(value)
     }
     getCategory(value: string){
+        if (this.selected === 'Mercado')
+        this.router.navigate(['/mercado/categoria', value])
+        if (this.selected === 'Tecnologia')
+        this.router.navigate(['/tecnologia/categoria', value])
         this.categories.emit(value)
         
     }

@@ -1,0 +1,15 @@
+.results{
+    max-width: 95%;
+   margin-left: 50px;
+}
+
+h2{
+    display: block;
+}
+.card-list{
+   
+    align-items: center;
+   min-height: fit-content;
+   border-top: 1px solid #ccc;
+   overflow-x: scroll;
+}

@@ -2,7 +2,7 @@
     padding-bottom: 50px;
     padding-top: 20px;
     border-right: 1px solid #ccc;
-    background-color: #fff;
+    background-color: #d1eaff;
     z-index: 10;
 
 }
@@ -21,8 +21,9 @@
     padding: 2px 30px 2px 5px;
 }
 .menu_items:hover{
-    background-color: aquamarine;
+    background-color: rgb(127, 82, 251);
     cursor: pointer;
+    color: #ffffff;
 }
 .submenu_items{
     cursor: pointer;
@@ -39,6 +40,7 @@ h6{
     padding-top: 6px;
 }
 .select{
-    background-color: aquamarine;
+    background-color: rgb(127, 82, 251);
+    color: #ffffff;
 }
 

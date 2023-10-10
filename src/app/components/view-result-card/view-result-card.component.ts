@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { BasicData } from '../../models/basic-data';
+import { fromEvent } from 'rxjs';
 
 @Component({
   selector: 'view-result-card',
@@ -10,10 +11,29 @@ export class ViewResultCardComponent implements OnInit {
 
   @Input() data!: any
   @Input() baseUrl: string = ""
-  constructor() { }
+  @Input() store: string = ""
+  @Input() styles: any
 
-  ngOnInit(): void {
+  @Output() scroll_value = new EventEmitter<number>()
+ 
+
+  style = {'width': '80px;',
+  'height': '150px;'}
+  constructor() { 
+
   }
 
-}
 
+  ngOnInit(): void {
+   
+  }
+  getDiscount(price: number, listPrice: number):string{
+
+    if(listPrice>price)
+  return "-"+ Math.round(((listPrice- price)/listPrice)*100)+"%"
+  else
+  return ""
+  }
+
+
+}

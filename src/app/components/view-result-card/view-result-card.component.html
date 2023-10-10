@@ -1,10 +1,35 @@
 
-<a [href]="baseUrl+ data.link" class="card">
-    <img [src]="data.image" width="50px" height="200px"  class="card-img-top" alt="...">
-    <div class="card-body">
-      <h5 class="card-title">{{data.productName}}</h5>
-      <h6 class="card-title">{{data.price | currency:'COP':'$ '}}</h6>
-      <p class="card-text">{{data.brand}}</p>
-      <p *ngIf="data.store_name">{{data.store_name}}</p>
-    </div>
-</a>
+<div *ngIf="data" class="product-item">
+
+  <a [href]="data.url">
+      <div [hidden]="data.link_img">
+        cagando
+      </div>
+        <img [ngStyle]="styles?.img" [src]="data.link_img" fallback="../../../assets/img/notfound.png" width="50px" height="150px" class="card-img-top" alt="...">
+<div>
+  
+</div>
+      <div class="card-body">
+        <h5 class="card-title">{{data.name.slice(0, 50)}}</h5>
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <div class="list-price" *ngIf="data.list_price != data.price">{{data.list_price == 0 ? "": data.list_price | currency:'COP':'$ ' : '1.0-0'}}</div>
+            <h6 class="price">{{data.price ==0 ? "No disponible": data.price | currency:'COP':'$ ' : '1.0-0'}}</h6>
+
+          </div>
+          <div class="discount-percent" *ngIf="getDiscount(data.price, data.list_price)!= '' ">{{getDiscount(data.price, data.list_price)}}</div>
+        </div>
+        <div class="store-brand">
+          <p class="card-text">{{data.brand}}</p>
+          <!-- <p *ngIf="data.store_name">{{data.store_name}}</p> -->
+          <div>
+            <img src="../../../assets/img/{{data.store}}.png" height="40" width="40" alt="">
+            
+          </div>
+
+        </div>
+  
+       
+      </div>
+  </a>
+</div>
