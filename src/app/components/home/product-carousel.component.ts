@@ -1,59 +1,70 @@
-import { Component } from '@angular/core';
+import { ViewportScroller } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
 import { OwlOptions } from 'ngx-owl-carousel-o';
+import { PartesPcData } from 'src/app/models/partes-pc-data';
+import { TecDataResponse } from 'src/app/models/tec-data-response';
 import { SearchService } from 'src/app/service/search.service';
 
 @Component({
   selector: 'product-carousel',
   template: `
-    <div>
-    <owl-carousel-o [options]="customOptions">
-
-    <ng-container *ngFor="let slide of []">
-    <ng-template carouselSlide [id]="slide.id">
-    <img [src]="slide.src" [alt]="slide.alt" [title]="slide.title">
-    </ng-template>
-    </ng-container>
-
-</owl-carousel-o>
+<div class="container px-0" >
+  <h3></h3>
+  <h4>{{title}}</h4>
+  <drag-scroll [scroll-x-wheel-enabled]="true" [scrollbar-hidden]="true">
+    <div *ngIf="partesPcHome" class="d-flex">
+      <app-partes-pc-list class="partes-pc-card mb-1" *ngFor="let partes of partesPcHome" [partesPc]="partes" drag-scroll-item></app-partes-pc-list>
     </div>
+    <div *ngIf="products" >
+      <view-result-card class="product-card mb-1" *ngFor="let p of products; let i = index" drag-scroll-item [data]="p" ></view-result-card>
+    </div>
+  </drag-scroll>
+</div>
   `,
   styles: [`
-
+  
+  drag-scroll {
+    height: fit-content;
+  width: 100%;
+  padding-right: 0.5rem; 
+}
+  .product-card{
+    background: white;
+    display: block;
+  height: 20rem ;
+  width: 12rem ;
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
+  margin-top: 0.5rem;
+  border-radius: 0.75rem;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  }
+  .partes-pc-card{
+    background: white;
+    overflow: hidden;
+  height: 10rem ;
+  min-width: 12rem ;
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
+  margin-top: 0.5rem;
+  border-radius: 0.75rem !important;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  }
   `]
 })
-export class ProductCarouselComponent {
-  customOptions: OwlOptions = {
-    loop: true,
-    mouseDrag: false,
-    touchDrag: false,
-    pullDrag: false,
-    dots: false,
-    navSpeed: 700,
-    navText: ['', ''],
-    responsive: {
-      0: {
-        items: 1
-      },
-      400: {
-        items: 2
-      },
-      740: {
-        items: 3
-      },
-      940: {
-        items: 4
-      }
-    },
-    nav: true
+export class ProductCarouselComponent implements OnInit {
+
+  @Input() products: TecDataResponse[]
+  @Input() category: string
+  @Input() partesPcHome: PartesPcData[]
+  @Input() title: string
+
+  constructor(private searchService: SearchService, private scroll: ViewportScroller){
+
+   
+  }
+  ngOnInit(): void {
+    
   }
 
-  constructor(private searchService: SearchService){
-    this.getDiscountTecProducts()
-  }
-
-  getDiscountTecProducts(){
-    this.searchService.getDiscountTecProducts().subscribe({
-      next: data => console.log(data)
-    })
-  }
 }

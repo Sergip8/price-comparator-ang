@@ -29,9 +29,20 @@ import { HomeComponent } from './components/home/home.component';
 import { InfiniteScrollDirective } from './directives/infinite-scroll.directive';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { ProductCarouselComponent } from './components/home/product-carousel.component';
+import { DragScrollModule } from 'ngx-drag-scroll';
+import { PriceHistoryChartComponent } from './components/price-history-chart/price-history-chart.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { ProductDetailComponent } from './components/product-detail/product-detail.component';
+import { LoginComponent } from './components/login/login.component';
+import { ClickOutsideDirective } from './directives/click-outside.directive';
+import { ModalDirective } from './directives/modal.directive';
+import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
 
-
-
+import {GoogleLoginProvider,FacebookLoginProvider} from '@abacritt/angularx-social-login';
+import {  GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
+import { environment } from 'src/environments/environment';
+import {CookieService} from 'ngx-cookie-service';
+import { ProductFavoritesComponent } from './components/navbar/favorite-view';
 
 @NgModule({
   declarations: [
@@ -50,12 +61,18 @@ import { ProductCarouselComponent } from './components/home/product-carousel.com
     CategoriesMenuListComponent,
     BrandsMenuListComponent,
     LoadingComponent,
-    FallbackImgDirective,
     NavbarComponent,
     HomeComponent,
-    InfiniteScrollDirective,
     ProductCarouselComponent,
+    PriceHistoryChartComponent,
+    ProductDetailComponent,
+    LoginComponent,
+    ProductFavoritesComponent,
     
+    ClickOutsideDirective,
+    FallbackImgDirective,
+    InfiniteScrollDirective,
+    ModalDirective
   ],
   imports: [
     BrowserModule,
@@ -66,14 +83,38 @@ import { ProductCarouselComponent } from './components/home/product-carousel.com
     BrowserAnimationsModule,
     MatSliderModule,
     MatIconModule,
-    CarouselModule 
+    CarouselModule,
+    DragScrollModule,
+    NgApexchartsModule,
+    SocialLoginModule ,
+    GoogleSigninButtonModule
  
   ],
   providers: [
     {
-      provide: RouteReuseStrategy,
-      useClass: ReuseRouteStrategyService,
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(environment.clientId)
+          },
+          {
+            id: FacebookLoginProvider.PROVIDER_ID,
+            provider: new FacebookLoginProvider('clientId')
+          }
+        ],
+        onError: (err) => {
+          console.error(err);
+        }
+      } as SocialAuthServiceConfig,
+   
+  
     },
+    { provide: RouteReuseStrategy,
+     useClass: ReuseRouteStrategyService,},
+     CookieService
   ],
   bootstrap: [AppComponent]
 })

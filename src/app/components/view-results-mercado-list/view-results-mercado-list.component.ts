@@ -15,13 +15,13 @@ export class ViewResultsMercadoListComponent {
   page_olimpica = 0;
   page_jumbo = 0;
   page_carulla = 0;
-  size = 10;
+  size = 20;
   page = 0;
   search_value = "";
   searchCategory = "";
   res!: SearchPayload;
   searchMethod = "";
-  mercadoReq: MercadoRequest[];
+  mercadoReq: MercadoRequest;
   styles = {
     card: { width: "150px", height: "250px", "border-radius": "0" },
     img: { width: "40px", height: "120px" },
@@ -31,21 +31,24 @@ export class ViewResultsMercadoListComponent {
     private service: SearchService,
     private activatedRoute: ActivatedRoute
   ) {
-    this.activatedRoute.params.subscribe((params) => {
-      if (params["search"]) {
-        this.search_value = params["search"];
-        console.log(this.search_value);
-        this.getSearchResult();
-      }
-      if (params["category"]) this.searchCategory = params["category"];
-      this.getCategoryResult();
-    });
+    var url = new URL(window.location.href);
+    this.search_value = url.searchParams.get("search");
+    if(this.search_value){
+      this.getSearchResult()
+    }
+    // this.activatedRoute.params.subscribe((params) => {
+    //   if (params["search"]) {
+    //     this.search_value = params["search"];
+    //     console.log(this.search_value);
+    //     this.getSearchResult();
+    //   }
+    //   if (params["category"]) this.searchCategory = params["category"];
+    //   this.getCategoryResult();
+    // });
   }
 
   getSearchResult() {
-    this.searchMethod = "search";
-
-    this.service.getMercado(this.search_value, this.page, this.size).subscribe({
+    this.service.getMercado(this.search_value, this.page, this.size, 0, 1000000).subscribe({
       next: (data) => {
         this.mercadoReq = data;
         console.log(data);
@@ -54,23 +57,8 @@ export class ViewResultsMercadoListComponent {
     });
   }
 
-  getCategory(value: string) {
-    this.search_value = value;
-    this.searchMethod = "category";
-    this.getCategoryResult();
-  }
 
-  getCategoryResult() {
-    this.searchMethod = "category";
-    this.service
-      .getMercadoCategoryRes(this.searchCategory, this.page, this.size)
-      .subscribe({
-        next: (data) => {
-          this.mercadoReq = data;
-          console.log(data);
-        },
-      });
-  }
+  
 
   // search(value: string){
   //   this.search_value = value
@@ -79,21 +67,5 @@ export class ViewResultsMercadoListComponent {
   //   this.flag = true
   //   this.getSearchResult()
   // }
-  nextPage(mercado: MercadoRequest, index: number) {
-    mercado.page += 1;
-    console.log(this.searchMethod);
-    this.service
-      .nextPage(
-        mercado.store,
-        mercado.page,
-        this.search_value ? this.search_value : this.searchCategory,
-        this.searchMethod
-      )
-      .subscribe({
-        next: (data) => {
-          console.log(data);
-          this.mercadoReq[index].data.push(...data);
-        },
-      });
-  }
+
 }

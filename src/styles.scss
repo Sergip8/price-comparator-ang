@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
-@import 'ngx-owl-carousel-o/lib/styles/scss/owl.carousel';
+
+
 body{
       /**
      * colors
@@ -18,7 +19,9 @@ body{
      --blue-3:hsl(223, 40%, 86%);
      --black:hsl(0, 0%, 9%);
      --green-discount:hsl(134, 71%, 41%);
- 
+     --favorite-selected: hsl(331, 100%, 82%);
+     --favorite: hsl(330, 67%, 94%);
+     --gutter: 20px;
      
    
      /**

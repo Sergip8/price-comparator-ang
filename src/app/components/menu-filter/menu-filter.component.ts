@@ -11,24 +11,26 @@ import { MenuService } from 'src/app/service/menu-service';
 export class MenuFilterComponent implements OnInit {
 
   loading = false
-  
   brandsSelected = []
   brands: string[]
   categories: string[]
-  @Output() priceRange = new EventEmitter<void>()
+  path: string
+  //@Output() priceRange = new EventEmitter<void>()
 
   constructor(private router: Router, 
     public brandFilter: BrandFilterService,
     private menuService: MenuService,) {
     brandFilter.brands.subscribe(b => this.brands = b)  
-    brandFilter.categories.subscribe(c => this.categories = c)
+    brandFilter.categories.subscribe(c => this.categories = [...new Set(c)])
+    this.path = new URL(window.location.href).pathname
+    console.log(this.path)
    }
 
   ngOnInit(): void {
     
   }
   catSelected(cat:string){
-    this.router.navigate(['/tecnologia'], {queryParams: {cat: cat}, queryParamsHandling: 'merge'})
+    this.router.navigate([this.path], {queryParams: {cat: cat}, queryParamsHandling: 'merge'})
   }
   brandList(brand:any){
     console.log(brand)
@@ -45,7 +47,7 @@ export class MenuFilterComponent implements OnInit {
     
     
     
-    this.router.navigate(['/tecnologia'], {queryParams: {brands: this.brandsSelected}, queryParamsHandling: 'merge'})
+    this.router.navigate([this.path], {queryParams: {brands: this.brandsSelected}, queryParamsHandling: 'merge'})
 
   }
   brandSelected(brand: string, index: number){
@@ -67,11 +69,16 @@ export class MenuFilterComponent implements OnInit {
   // this.brandFilter.brandsState$.next(brands)
   // console.log(this.brandFilter.brandsState$)
   // Object.keys(this.brandFilter.brandsState$.value).forEach((key)=>{ if(this.brandFilter.brandsState$.value[key]) brandsList.push(key) }) 
-  let catLink = this.menuService.categoryLink.value
-  if(catLink == "")
-  this.router.navigate(['/tecnologia'], {queryParams: {brands: this.brandFilter.brandsSelected.value.toString()}, queryParamsHandling: 'merge'})
-    else
-    this.router.navigate(['/tecnologia/categoria/'+catLink], {queryParams: {brands: this.brandFilter.brandsSelected.value.toString()}, queryParamsHandling: 'merge'} )
+  
+  this.router.navigate([this.path], {queryParams: {brands: this.brandFilter.brandsSelected.value.toString()}, queryParamsHandling: 'merge'})
+  
+  
   }
 
+  getPriceRange(priceRange: number[]){
+ 
+    this.router.navigate([this.path], {queryParams: {priceRange: priceRange.toString()}, queryParamsHandling: 'merge'})
+  
+    }
+  
 }

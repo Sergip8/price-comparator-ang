@@ -1,7 +1,8 @@
 
 .partes-list-container{
     margin: 30px 200px 0 200px;
-    
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
   
 }
 .store-img{
@@ -20,5 +21,7 @@
 }
 .list-container{
     margin-top: 10px;
+   margin: 10px;
+   border-radius: var(--border-radius-sm);
 }
 

@@ -1,76 +1,14 @@
+<div class="gggg">
+</div>
+
 <header>
-
-    <div class="header-top">
-
-      <div class="container">
-
-        <ul class="header-social-container">
-
-          <li>
-            <a href="#" class="social-link">
-              <mat-icon fontIcon="facebook"></mat-icon>
-            </a>
-          </li>
-
-          <li>
-            <a href="#" class="social-link">
-              <mat-icon fontIcon="twitter"></mat-icon>
-              
-            </a>
-          </li>
-
-          <li>
-            <a href="#" class="social-link">
-                <mat-icon fontIcon="instagram"></mat-icon>
-
-            </a>
-          </li>
-
-          <li>
-            <a href="#" class="social-link">
-                <mat-icon fontIcon="linkedin"></mat-icon>
-
-            </a>
-          </li>
-
-        </ul>
-
-        <div class="header-alert-news">
-          <p>
-            <b>Free Shipping</b>
-            This Week Order Over - $55
-          </p>
-        </div>
-
-        <div class="header-top-actions">
-
-          <select name="currency">
-
-            <option value="usd">USD &dollar;</option>
-            <option value="eur">EUR &euro;</option>
-
-          </select>
-
-          <select name="language">
-
-            <option value="en-US">English</option>
-            <option value="es-ES">Espa&ntilde;ol</option>
-            <option value="fr">Fran&ccedil;ais</option>
-
-          </select>
-
-        </div>
-
-      </div>
-
-    </div>
-
+  
     <div class="header-main">
 
       <div class="container">
 
         <a href="#" class="header-logo">
-          <img src="./assets/images/logo/logo.svg" alt="Anon's logo" width="120" height="36">
+          <img src="../../../assets/img/comparame esta.png" alt="comparame esta" width="120" height="36">
         </a>
 
         <div class="header-search-container">
@@ -83,30 +21,45 @@
 
         </div>
 
-        <div class="header-user-actions">
+        <div class="header-user-actions" >
+          <div  clickOutside (onClickOutside)="[showLogin = false]">
+          <button class="action-btn" [ngClass]="showLogin ? 'open-login': '' " (click)="showLogin = !showLogin">
+            <mat-icon fontIcon="person" ></mat-icon>
+            
+            </button>
+            <div *ngIf="showLogin">
+              <app-login ></app-login>
+            </div>
+
+          </div>
 
           <button class="action-btn">
-            <mat-icon fontIcon="person"></mat-icon>
-
-          </button>
-
-          <button class="action-btn">
-            <mat-icon fontIcon="heart"></mat-icon>
+            <mat-icon fontIcon="notifications"></mat-icon>
 
             <span class="count">0</span>
           </button>
+<div clickOutside (onClickOutside)="[showFavorites = false]">
+  <button class="action-btn" (click)="getFavorites()">
+    <mat-icon fontIcon="favorite"></mat-icon>
 
-          <button class="action-btn">
-            <mat-icon fontIcon="bag"></mat-icon>
+    <span class="count">0</span>
+  </button>
+  <div *ngIf="showFavorites" class="favorites">
 
-            <span class="count">0</span>
-          </button>
+    <product-favorites  *ngFor="let p of favoriteProducts" [product]="p" (removeProduct)="removeFavorites($event)" ></product-favorites>
+    </div>
+  </div>
+          <div>
+            <p >{{(this.auth.user$ | async)?.username}}</p>
+            </div>
 
         </div>
 
       </div>
-
+   
+      
     </div>
+    
 
     <nav class="desktop-navigation-menu">
 
@@ -118,16 +71,16 @@
             <a href="#" class="menu-title">Home</a>
           </li>
           <li class="menu-category" *ngFor="let item of menuCategories | keyvalue">
-            <a (click)="navigateTo(item.key.split(' ').join('-'))" class="menu-title" (click)="catSelected(item.key)">{{item.key}}</a>
+            <a (click)="navigateTo(item.key)" class="menu-title" (click)="catSelected(item.key)">{{menuService.convertAccentString(item.key)}}</a>
 
             <div class="dropdown-panel">
 
               <ul class="dropdown-panel-list">
 
                 <li class="dropdown-item" *ngFor="let subItem of item.value | keyvalue">
-                  <a  (click)="navigateTo(item.key.split(' ').join('-'),subItem.key.toString().split(' ').join('-'))">{{subItem.key}}</a>
+                  <a  (click)="navigateTo(item.key,subItem.key.toString())">{{menuService.convertAccentString(subItem.key.toString())}}</a>
                   <div class="dropdown-subitem" style="margin-left: 20px;" *ngFor="let subsubItem of subItem.value | keyvalue">
-                    <a (click)="navigateTo(item.key.split(' ').join('-'),subItem.key.toString().split(' ').join('-'),subsubItem.key.toString().split(' ').join('-'))">{{subsubItem.key}}</a>
+                    <a (click)="navigateTo(item.key,subItem.key.toString(),subsubItem.key.toString())">{{menuService.convertAccentString(subsubItem.key)}}</a>
                   </div>
                 </li>
                 
@@ -135,292 +88,11 @@
               </ul>
             </div>
           </li>
-          
-          <!-- <li class="menu-category" *ngFor="let item of menuList | keyvalue">
-            <a href="#" class="menu-title">{{item.key}}</a>
-
-            <div class="dropdown-panel">
-
-              <ul class="dropdown-panel-list">
-
-                <li class="dropdown-item" *ngFor="let subItem of item.value | keyvalue">
-                  <a href="#">{{subItem.value}}</a>
-                </li>
-
-                
-                
-              </ul>
-            </div>
-            </li> -->
           </ul>
       </div>
 
     </nav> 
-
-    <!-- <nav class="desktop-navigation-menu">
-
-      <div class="container">
-
-        <ul class="desktop-menu-category-list">
-
-          <li class="menu-category">
-            <a href="#" class="menu-title">Home</a>
-          </li>
-
-          <li class="menu-category">
-            <a href="#" class="menu-title">Categories</a>
-
-            <div class="dropdown-panel">
-
-              <ul class="dropdown-panel-list">
-
-                <li class="menu-title">
-                  <a href="#">Electronics</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">Desktop</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">Laptop</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">Camera</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">Tablet</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">Headphone</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">
-                    <img src="./assets/images/electronics-banner-1.jpg" alt="headphone collection" width="250"
-                      height="119">
-                  </a>
-                </li>
-
-              </ul>
-
-              <ul class="dropdown-panel-list">
-
-                <li class="menu-title">
-                  <a href="#">Men's</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">Formal</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">Casual</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">Sports</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">Jacket</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">Sunglasses</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">
-                    <img src="./assets/images/mens-banner.jpg" alt="men's fashion" width="250" height="119">
-                  </a>
-                </li>
-
-              </ul>
-
-              <ul class="dropdown-panel-list">
-
-                <li class="menu-title">
-                  <a href="#">Women's</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">Formal</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">Casual</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">Perfume</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">Cosmetics</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">Bags</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">
-                    <img src="./assets/images/womens-banner.jpg" alt="women's fashion" width="250" height="119">
-                  </a>
-                </li>
-
-              </ul>
-
-              <ul class="dropdown-panel-list">
-
-                <li class="menu-title">
-                  <a href="#">Electronics</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">Smart Watch</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">Smart TV</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">Keyboard</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">Mouse</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">Microphone</a>
-                </li>
-
-                <li class="panel-list-item">
-                  <a href="#">
-                    <img src="./assets/images/electronics-banner-2.jpg" alt="mouse collection" width="250" height="119">
-                  </a>
-                </li>
-
-              </ul>
-
-            </div>
-          </li>
-
-          <li class="menu-category">
-            <a href="#" class="menu-title">Men's</a>
-
-            <ul class="dropdown-list">
-
-              <li class="dropdown-item">
-                <a href="#">Shirt</a>
-              </li>
-
-              <li class="dropdown-item">
-                <a href="#">Shorts & Jeans</a>
-              </li>
-
-              <li class="dropdown-item">
-                <a href="#">Safety Shoes</a>
-              </li>
-
-              <li class="dropdown-item">
-                <a href="#">Wallet</a>
-              </li>
-
-            </ul>
-          </li>
-
-          <li class="menu-category">
-            <a href="#" class="menu-title">Women's</a>
-
-            <ul class="dropdown-list">
-
-              <li class="dropdown-item">
-                <a href="#">Dress & Frock</a>
-              </li>
-
-              <li class="dropdown-item">
-                <a href="#">Earrings</a>
-              </li>
-
-              <li class="dropdown-item">
-                <a href="#">Necklace</a>
-              </li>
-
-              <li class="dropdown-item">
-                <a href="#">Makeup Kit</a>
-              </li>
-
-            </ul>
-          </li>
-
-          <li class="menu-category">
-            <a href="#" class="menu-title">Jewelry</a>
-
-            <ul class="dropdown-list">
-
-              <li class="dropdown-item">
-                <a href="#">Earrings</a>
-              </li>
-
-              <li class="dropdown-item">
-                <a href="#">Couple Rings</a>
-              </li>
-
-              <li class="dropdown-item">
-                <a href="#">Necklace</a>
-              </li>
-
-              <li class="dropdown-item">
-                <a href="#">Bracelets</a>
-              </li>
-
-            </ul>
-          </li>
-
-          <li class="menu-category">
-            <a href="#" class="menu-title">Perfume</a>
-
-            <ul class="dropdown-list">
-
-              <li class="dropdown-item">
-                <a href="#">Clothes Perfume</a>
-              </li>
-
-              <li class="dropdown-item">
-                <a href="#">Deodorant</a>
-              </li>
-
-              <li class="dropdown-item">
-                <a href="#">Flower Fragrance</a>
-              </li>
-
-              <li class="dropdown-item">
-                <a href="#">Air Freshener</a>
-              </li>
-
-            </ul>
-          </li>
-
-          <li class="menu-category">
-            <a href="#" class="menu-title">Blog</a>
-          </li>
-
-          <li class="menu-category">
-            <a href="#" class="menu-title">Hot Offers</a>
-          </li>
-
-        </ul>
-
-      </div>
-
-    </nav> -->
+   
 
     <div class="mobile-bottom-navigation">
 

@@ -1,27 +1,26 @@
 
 
 <div class="prices">
-    <div>
-        <label class="me-2 price-value-slider">{{minValue | currency:'COP':'$ '}}</label>
-    
-    </div>
-    <div>
-        <label class="ms-2 price-value-slider">{{maxValue | currency:'COP':'$ '}}</label>
-    
-    </div>
+
+        <label *ngFor="let ps of filterService.priceRange |async" class="me-2 price-value-slider">{{ps | currency:'COP':'$ '}}</label>
+ 
+
 
 </div>
 <mat-slider 
+*ngIf="filterService.priceRangeState | async as range"
 (change)="onSliderChanges()"
 class="price-slider"
 [disabled]="disabled"
-[max]="max"
-[min]="min"
+[max]="range[1]"
+[min]="range[0]"
 [step]="step"
 [discrete]="thumbLabel"
 [showTickMarks]="showTicks">
 
     <input [(ngModel)]="minValue" matSliderStartThumb>
     <input [(ngModel)]="maxValue" matSliderEndThumb>
+
+
     
 </mat-slider>

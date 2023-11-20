@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PartesPc } from 'src/app/models/partes-pc';
+import { PartesPcData } from 'src/app/models/partes-pc-data';
 import { SearchService } from 'src/app/service/search.service';
 
 @Component({
@@ -11,7 +12,7 @@ import { SearchService } from 'src/app/service/search.service';
 export class PartesPcViewComponent {
 
   query = ""
-  partesPcRes: PartesPc[]
+  partesPcRes: PartesPcData[]
   page = 0
   size = 10
 
@@ -31,7 +32,8 @@ export class PartesPcViewComponent {
   // }
   getPartesPc(){
     this.service.getPartesPc(this.query, this.page, this.size).subscribe({
-      next: data => this.partesPcRes = data,
+      next: data => {this.partesPcRes = data
+      console.log(data)},
       error: e => console.log(e)
     })
   }
@@ -40,15 +42,7 @@ export class PartesPcViewComponent {
   
     mercado.page +=1
     
-     this.service.getPartesPcNext(this.query, mercado.page, mercado.store).subscribe({
-       next: data => 
-       {
-        console.log(data)
-       this.partesPcRes[index].data.push(...data)
-       
-       }
      
-     })
    
    
  

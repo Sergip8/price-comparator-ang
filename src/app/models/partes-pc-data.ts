@@ -1,5 +1,6 @@
 export interface PartesPcData{
-    id: number
+    id: string
     name: string
     price: number
+    store: string
 }

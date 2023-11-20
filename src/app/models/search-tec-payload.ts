@@ -6,8 +6,8 @@ export class SearchTecPayload{
     
     brands: string[]
     categories: string[]
-    results: TecDataResponse[] = []
     count: number
     priceRange: number[]
+    results: TecDataResponse[] = []
 }
    

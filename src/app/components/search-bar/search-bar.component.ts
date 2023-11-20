@@ -153,7 +153,7 @@ export class SearchBarComponent implements OnInit {
     if(this.searchCategory == "tec")
     this.router.navigate(['/tecnologia'], {queryParams: {search: search}})
     if(this.searchCategory == "mer")
-    this.router.navigate(['/mercado', search])
+    this.router.navigate(['/mercado'], {queryParams: {search: search}})
 
   }
 

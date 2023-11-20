@@ -1,9 +1,11 @@
 export interface MercadoData{
     id: number
-    productName: string
-    link: string
+    name: string
+    url: string
     brand: string
-    image: string;
+    link_img: string;
     price: number;
     category: string;
+    store: string
+
 }

@@ -1,0 +1,34 @@
+<div class="container">
+
+    <div class="product-details">
+        <div class="product-card">
+            <div class="photo">
+                <img [src]="product.link_img">
+                
+                    <mat-icon [style.color]="isFavoriteSelected ? 'pink': ''" (click)="favoriteSelected(product.id)" class="favorite-icon" fontIcon="favorite"></mat-icon>
+        
+                  
+              </div>
+              <div class="description">
+                <h3>{{product.name}}</h3>
+                <h1 class="price"> {{product.price}}</h1>
+                <div class="spe" *ngFor="let spe of productDescription | keyvalue; let i=index" >
+                    <div><span *ngIf="spe.key !=i">{{spe.key}}:</span><span>{{spe.value}}</span></div>
+                </div>
+                <a [href]="product.url">Ir a tienda</a>
+                
+              </div>
+           
+        </div>
+        
+        <div>
+    
+            <price-history-chart [data]="productData"></price-history-chart>
+        </div>
+        
+    
+    </div>
+    <h2>Productos Similares</h2>    
+    
+    <product-carousel [products]="productList"></product-carousel>
+</div>

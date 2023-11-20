@@ -1,25 +1,29 @@
 .main-container{
     background-color: white;
+    
    
 }
-
+a{
+    cursor: pointer;
+}
 li{
     list-style: none;
 }
 .product-list-container{
     text-align: center;
-   
+    
     
 }
 .product-name{
     font-size: 11px;
     overflow: hidden;
    text-overflow: ellipsis;
-  width: 180px;
+  
   
 }
 .product-price{
     font-weight: 600;
+    margin-bottom: 8px;
 }
 .store{
     margin: 20px 0 20px 0;
@@ -28,7 +32,10 @@ li{
    
    padding-left: 5px;
    padding-right: 5px;
-    height: 90px;
+    height: 150px;
     padding-top: 10px;
    border-right: 1px solid #ffffff;
+}
+.item-content{
+    height: 60px;
 }

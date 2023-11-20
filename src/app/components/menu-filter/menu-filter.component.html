@@ -10,9 +10,9 @@
     <div class="mt-2 class brands">
         <h4>Marcas</h4>
       <loading [loading]="loading && brands.length == 0"></loading>
-      <div *ngFor="let b of brands; index as i" class="d-flex">
+      <div *ngFor="let b of brands; index as i" class="brand-item">
         <div>
-            <input #brandInput [checked]="brandFilter.brandsSelected.value.includes(b)" (click)="brandSelected(b, i)" type="checkbox">
+            <input class="brand-checkbox" #brandInput [checked]="brandFilter.brandsSelected.value.includes(b)" (click)="brandSelected(b, i)" type="checkbox">
         </div>
         <div class="brand" (click)="brandSelected(b, i)" type="button">
             &nbsp;{{b}}</div> 
@@ -21,7 +21,7 @@
       </div>
     </div>
     <div>
-        <app-price-slide (selectedPriceRange)="priceRange.emit()"></app-price-slide>
+        <app-price-slide (selectedPriceRange)="getPriceRange($event)"></app-price-slide>
     </div>
    
 

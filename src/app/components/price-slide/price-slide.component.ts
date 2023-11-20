@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
+import { Observable } from 'rxjs';
 import { BrandFilterService } from 'src/app/service/brand-filter.service';
 
 @Component({
@@ -9,7 +10,6 @@ import { BrandFilterService } from 'src/app/service/brand-filter.service';
 })
 export class PriceSlideComponent implements OnInit {
   
-  setPriceRange: number[]
   @Output() selectedPriceRange = new EventEmitter<number[]>()
   disabled = false;
   max = 100;
@@ -19,29 +19,36 @@ export class PriceSlideComponent implements OnInit {
   thumbLabel = false;
   minValue = 20;
   maxValue = 50;
-  constructor(private filterService: BrandFilterService){
-    filterService.priceRange.subscribe(pr => this.setPriceRange = pr)
+  constructor(public filterService: BrandFilterService){
+    this.filterService.priceRange.subscribe(pr =>{
+    this.minValue = pr[0]
+     this.maxValue = pr[1]
+    })
+    this.filterService.priceRangeState.subscribe(spr =>{
+      this.min = spr[0]
+      this.max = spr[1]
+      })
   }
   
   
   ngOnInit(): void {
-    this.min = this.minValue = this.setPriceRange[0]
-    this.max = this.maxValue = this.setPriceRange[1]
+    
     this.step = Math.trunc(this.max/this.min*10)
+    console.log(this.maxValue)
+    console.log(this.minValue)
+    console.log(this.filterService.priceRange.value)
+    //console.log(this.filterService.setPriceRange.value)
+
+  }
+  
+  onSliderChanges(){
+    
+    this.filterService.priceRange.next([this.minValue, this.maxValue])
+    this.selectedPriceRange.emit([this.minValue, this.maxValue])
+    
   }
 
-onSliderChanges(){
-  //console.log(this.setPriceRange)
-  this.filterService.priceRange.next([this.minValue, this.maxValue])
-  this.selectedPriceRange.emit()
-}
-ngOnChanges(changes: SimpleChanges) {
-//console.log(changes["setPriceRange"])
-this.setPriceRange = changes["setPriceRange"].currentValue;
-this.min = this.minValue = this.setPriceRange[0]
-this.max = this.maxValue = this.setPriceRange[1]
-this.step = Math.trunc(this.maxValue/this.minValue*5)
-    
 }
 
-}
+
+

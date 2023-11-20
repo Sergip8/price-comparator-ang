@@ -13,6 +13,12 @@ const baseUrl = 'http://localhost:8080/api/'
 
     categoryLink = new BehaviorSubject<string>("") 
 
+    accent = {
+      tecnologia: "tecnología",
+      audifonos: "audífonos",
+      telefonos: "teléfonos",
+    }
+
     constructor(private http: HttpClient){}
     main_menu = {}
     mercado = {
@@ -163,5 +169,21 @@ const baseUrl = 'http://localhost:8080/api/'
             "Electrodomesticos": null
            
         }
+    }
+
+
+  
+    convertAccentString(value: string) {
+   
+      const splitStr = value.split("-")
+      splitStr.forEach((el, i) =>{
+  
+        if(this.accent[el])
+           splitStr[i] = this.accent[el]
+      })
+      return splitStr.join(" ")
+     
+      
+      
     }
   }

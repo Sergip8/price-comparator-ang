@@ -1,9 +1,11 @@
-
-
+    <div class="d-flex">
         <div>
-            <input #brandInput [checked]="brandFilter.isBrandChecked" (click)="brand1()" type="checkbox">
+            <input class="brand-checkbox" #brandInput [checked]="brandFilter.isBrandChecked" (click)="brand1()" type="checkbox">
         </div>
         <div class="brand" (click)="brand1()" type="button">
             &nbsp;{{brand}}</div> 
+
+    </div>
+
     
 

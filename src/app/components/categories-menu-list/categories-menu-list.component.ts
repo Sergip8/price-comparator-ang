@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { MenuService } from 'src/app/service/menu-service';
 
 @Component({
   selector: 'app-categories-menu-list',
@@ -9,5 +10,7 @@ export class CategoriesMenuListComponent {
   @Input() category: string
   @Output() cat = new EventEmitter<string>()
 
-  
+  constructor(public menuService: MenuService){
+    
+  }
 }

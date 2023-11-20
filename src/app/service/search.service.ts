@@ -16,8 +16,8 @@ const baseUrl = "http://localhost:8080/api/";
 export class SearchService {
 
 
-  getDiscountTecProducts() {
-    return this.http.get<any[]>(baseUrl+'discount_tec')
+  getDiscountTecProducts(cat: string) {
+    return this.http.get<TecDataResponse[]>(baseUrl+`results/discount_tec?cat=${cat}`)
   }
 
   constructor(private http: HttpClient) {}
@@ -62,15 +62,15 @@ export class SearchService {
     );
   }
   getPartesPc(search_value: string, page: number, size: number) {
-    return this.http.get<PartesPc[]>(
+    return this.http.get<PartesPcData[]>(
       baseUrl +
         `results/partes_pc?search=${search_value}&page=${page}&size=${size}`
     );
   }
-  getMercado(search_value: string, page: number, size: number) {
-    return this.http.get<MercadoRequest[]>(
+  getMercado(search_value: string, page: number, size: number,  minPrice: number, maxPrice: number) {
+    return this.http.get<MercadoRequest>(
       baseUrl +
-        `results/mercado?search=${search_value}&page=${page}&size=${size}`
+        `results/mercado?search=${search_value}&page=${page}&size=${size}&minPrice=${minPrice}&maxPrice=${maxPrice}`
     );
   }
   getPartesPcNext(search_value: string, page: number, store: string) {
@@ -94,9 +94,34 @@ export class SearchService {
         `results/tecnologia?search=${search_value}&categoryFilter=${catfilter}&page=${page}&size=${size}&brands=${brands}&category=${cat}&minPrice=${minPrice}&maxPrice=${maxPrice}`
     );
   }
+  getMerResult(
+    search_value: string,
+    page: number,
+    size: number,
+    brands: string[],
+    catfilter: string,
+    cat: string,
+    minPrice: number,
+    maxPrice: number
+  ) {
+    return this.http.get<SearchTecPayload>(
+      baseUrl +
+        `results/mercado?search=${search_value}&categoryFilter=${catfilter}&page=${page}&size=${size}&brands=${brands}&category=${cat}&minPrice=${minPrice}&maxPrice=${maxPrice}`
+    );
+  }
   getlistSubcategories(cat: string) {
     return this.http.get<TecDataResponse[]>(
       baseUrl + `results/cat/tecnologia?search=${cat}`
+    );
+  }
+  getRelatedProducts(name: string, path: string) {
+    return this.http.get<TecDataResponse[]>(
+      baseUrl + `results/${path}/related/${name}`
+    );
+  }
+  getMerRelatedProducts(name: string) {
+    return this.http.get<TecDataResponse[]>(
+      baseUrl + `results/mercado/related/${name}`
     );
   }
 }

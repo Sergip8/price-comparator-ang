@@ -1,11 +1,16 @@
 <div class="main-container " *ngIf="partesPc">
     <div class="product-list-container">
-       
-        <div class="item" >
-            <li class="product-name">{{partesPc.name.slice(0,50)}}</li>
-            <li class="product-price">{{partesPc.price | currency:'COP':'$ '}}</li>
+    <a (click)="routeToDetails(partesPc)">
 
+        <div class="item" >
+            <div class="item-content">
+                <li class="product-name" [innerHTML]="changeName(partesPc.name)"></li>
+                <li class="product-price">{{partesPc.price | currency:'COP':'$ ' : '1.0-0'}}</li>
+
+            </div>
+            <img src="../../../assets/img/{{partesPc.store}}.png" height="60" width="80" alt="">
         </div>
+    </a>   
         
     </div>
 </div>
