@@ -6,9 +6,7 @@
         cagando
       </div> -->
         <img [alt]="data.name" [ngStyle]="styles?.img" [src]="data?.link_img" fallback="../../../assets/img/notfound.png" width="50px" height="150px" class="card-img-top" alt="...">
-<div>
-  
-</div>
+
       <div class="card-body">
         <span class="card-title" [innerHTML]="changeName(data.name)"></span>
         <div class="d-flex justify-content-between align-items-center price-box">
@@ -19,15 +17,24 @@
           </div>
           <div class="discount-percent" *ngIf="getDiscount(data.price, data.list_price)!= '' ">{{getDiscount(data.price, data.list_price)}}</div>
         </div>
-        <div class="store-brand">
-          <p class="card-text">{{data.brand}}</p>
+        
+          <p class="card-text">{{data.brand.toUpperCase()}}</p>
           <!-- <p *ngIf="data.store_name">{{data.store_name}}</p> -->
-          <div>
+          <!-- <div>
             <img src="../../../assets/img/{{data.store}}.png" height="40" width="40" alt="">
             
+          </div> -->
+          <div *ngIf="isPartesPc">
+              <img src="../../../assets/img/{{data.store}}.png"  height="40" width="40">
+          </div>
+          <div class="stores">
+
+            <div *ngFor="let id of data.ids" class="store-img">
+              <img src="../../../assets/img/{{getNameImage(id)}}.png" height="40" width="40" alt="">
+            </div>
           </div>
 
-        </div>
+       
   
        
       </div>

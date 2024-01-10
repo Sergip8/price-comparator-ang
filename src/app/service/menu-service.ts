@@ -1,155 +1,107 @@
 import { HttpClient } from "@angular/common/http"
 import { Injectable } from "@angular/core"
-import { BehaviorSubject } from "rxjs"
+import { BehaviorSubject, filter } from "rxjs"
 import { SearchTecPayload } from "../models/search-tec-payload"
 
 const baseUrl = 'http://localhost:8080/api/'
+
+export interface LinkTree{
+  type: string
+  value: string
+
+}
+export enum StoreType{
+  GRANDES_SUPERFICIES,
+  PARTES_PC
+}
 @Injectable({
     providedIn: 'root'
   })
   export class MenuService {
 
+    mainCat = [
+      "tecnologia",
+      "electrodomesticos",
+      "mercado",
+      "cocina",
+      "moda-y-accesorios",
+      "hombre",
+      "mujer",
+      "muebles",
+      "hogar",
+      "deportes-y-ejercicio",
+      "salud-y-belleza",
+      "construccion",
+      "ferreteria",
+      "partes-pc"
+    ]
+
     categories = new BehaviorSubject<object>({}) 
 
     categoryLink = new BehaviorSubject<string>("") 
+    
+    private linkTreeState = new BehaviorSubject<LinkTree[]>([]) 
+    linkTreeState$ = this.linkTreeState.asObservable()
+   
+    private storeTypeState = new BehaviorSubject<StoreType>(StoreType.GRANDES_SUPERFICIES) 
+    storeTypeState$ = this.storeTypeState.asObservable()
 
     accent = {
       tecnologia: "tecnología",
       audifonos: "audífonos",
       telefonos: "teléfonos",
     }
+   
+    updateStoreTypeState(type: StoreType){
+      this.storeTypeState.next(type)
+    }
+    resetLinkTree(){
+      this.linkTreeState.next([])
+    }
+    addLinkTree(item: LinkTree){
+      const linkTree = this.linkTreeState.value
+      linkTree.push(item)
+      this.linkTreeState.next(linkTree)
+    }
+    removeLinkTree(index: number){
+      let linkTree = this.linkTreeState.value
+      linkTree = linkTree.slice(0, index+1)
+      this.linkTreeState.next(linkTree)
+    }
 
     constructor(private http: HttpClient){}
-    main_menu = {}
-    mercado = {
-        'despensa':[
-        'Arroz, granos y pastas',
-        'Aceites y vinagres',
-        'Azúcar, panela y endulzante',
-        'Enlatados y conservas',
-        'Cereales y granolas',
-        'Café, chocolates e infusiones',
-        'Harinas y mezclas para preparar',
-        'Salsas, condimentos y sopas'],
-
-        'leche_huevos_refrigerados':[
-        
-        'Huevos',
-        'Lacteos',
-        'Carnes frías y embutidos',
-        'Arepas y tortillas'
-        ],
-        'pollo_carne_pescado':[
-        'Res',
-        'Cerdo',
-        'Pollo',
-        'pescados y mariscos',
-        ],
-        'panaderia_reposteria':[
-        'Panadería fresca',
-        'Panadería empacada',
-        'Repostería',
-        'Ingredientes de repostería'
-        ],
-    }
-    tecnologia = {
-        'televisores':[
-           'Televisores'
-        ],
-        'Computadores':[
-
-            'Computadores portátiles',
-            'Computadores all in one',
-            'Computadores de escritorio',
-            'Monitores',
-            'Accesorios de computador',
-        ],
-        'audio':[
-
-            'Barras de sonido',
-            'Minicomponentes',
-            'Teatros en casa',
-            'Parlantes',
-            'Audífonos',
-            'Reproductores y accesorios',
-        ],
-        'consolas':[
-
-            'Consolas',
-            'Videojuegos',
-            'Accesorios para videojuegos',
-            'Computadores gamer',
-        ],
-        'smartphones':[
-
-            'Reacondicionados',
-            'Samsung',
-            'Xiaomi',
-            'Iphone',
-            'Motorola',
-            'Huawei',
-            'Tecno Mobile',
-            'Vivo',
-            'Realme',
-            'Oppo',
-            'Nokia',
-        ],
-        'smartwatch':[
-
-            'Samsung',
-            'Apple',
-            'Xiaomi',
-            'Huawei',
-        ],
-        'accesorios':[
-
-            'Audifonos',
-            'Cargadores',
-            'Monopod',
-            'Protectores y estuches',
-        ]
-    
-    }
-    getMenuCategories(){
-       return this.http.get<string[]>(baseUrl+"categories").subscribe({
-        next: cat => {
-            let categoryList = []
-            cat.forEach(c => categoryList.push(c.split("/").filter(cf => cf != "")))
-            categoryList = categoryList.filter(f => f.length == 3).sort()
-            //this.categories.next(categoryList)
   
-            console.log(categoryList)
-            // const dict = categoryList.reduce((acc, [key1,key2, value]) => {
-            //   // If a node with the current key exist in the accumulator, merge the value of that node with current value
-            //   // If node with current key doesnot exist, create a new node with that key and value as an array with current value being the element
-            //   //acc[key] = acc[key] ? [...acc[key], value] : [value];
-              
-            //   var vv = acc[key2] ? [...acc[key2], value] : [value];
-            //   acc[key1] = acc[key1] ? [...acc[key1], Object.assign({key2: vv})] : [vv];
-            //   return acc;
-            // }, {});
-            // console.log(dict);
-         let k = Object.fromEntries(categoryList)
-         this.categories.next(this.listaAObjeto(categoryList))
-        },
-        error: e => console.log(e)
-    })
+
+    getMenuCategories(){
+       return this.http.get<any[]>(baseUrl+"categories")
         
     }
+    // getPartesPcCategories(){
+    //   this.http.get<string[]>(baseUrl+"partes-pc/categories").subscribe({
+    //     next: cat =>{
+    //       console.log(cat)
+    //       let menuCategory = this.listaAObjeto(cat)
+    //     this.setMenuCategories(Object.assign(this.categories.value, menuCategory))
+    //       this.categories.next(Object.assign(this.categories.value, menuCategory))
+    //     }
+    //   })
+    // }
+   
 
     getAllByCategory(cat: string, page: number, size: number){
       return this.http.get<SearchTecPayload>(baseUrl+`categories/cat?cat=${cat}&page=${page}&size=${size}`)
     }
 
-    listaAObjeto(list: string[][]) {
+    listaAObjeto(cat: string[]) {
+      let categoryList = []
+      cat.forEach(c => categoryList.push(c.split("/").filter(cf => cf != "" && !cf.startsWith("/"))))
         const res = {};
-      
-        list.forEach(sublist => {
+        categoryList.forEach(sublist => {
           let objetoActual = res;
       
           sublist.forEach((el, index) => {
             if (index === sublist.length - 1) {
-              objetoActual[el] = el;
+              objetoActual[el] =el; 
             } else {
               objetoActual[el] = objetoActual[el] || {};
               objetoActual = objetoActual[el];
@@ -160,18 +112,20 @@ const baseUrl = 'http://localhost:8080/api/'
         return res;
       }
       
-   
-
-    getMainMenu(){
-        return this.main_menu ={
-            "Mercado": this.mercado,
-            "Tecnologia": this.tecnologia,
-            "Electrodomesticos": null
-           
-        }
-    }
-
-
+      setMenuCategories(cat: object){
+        sessionStorage.setItem("menu", JSON.stringify(cat))
+      }
+      getLocalMenuCategories(): object{
+          
+        try {
+           const menu = sessionStorage.getItem("menu")
+          return JSON.parse(menu)
+            
+          } catch (error) {
+            return null
+            
+          }
+      }
   
     convertAccentString(value: string) {
    

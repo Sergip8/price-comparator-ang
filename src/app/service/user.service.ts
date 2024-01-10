@@ -21,8 +21,8 @@ import { TecDataResponse } from "../models/tec-data-response";
     syncFavorities(email: string, fav: number[]) {
       return this.http.post<number[]>(this.baseUrl+ "users/sync-favorites",{email: email, fav:fav})
     }
-    setUserFavorite(email: string, productId: number){
-        return this.http.post<number[]>(this.baseUrl + "users/set-favorite", {email: email, productId:productId})
+    setUserFavorite(userId: string, productId: number){
+        return this.http.post<number[]>(this.baseUrl + "users/set-favorite", {userId: userId, productId:productId})
     }
     getUserFavorites(email: string){
         return this.http.post<number[]>(this.baseUrl+ "users/get-favorites", email)

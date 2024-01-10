@@ -1,0 +1,157 @@
+
+.product-container{
+    display: grid;
+    grid-template-columns: 0.2fr 1fr;
+}
+.sidebar{
+    
+    background-color: #fff;
+    
+    margin-right: 10px;
+    height: fit-content;
+    border-radius: 5px;   
+}
+.filter-icon-mobile{
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+.filter-icon-mobile span{
+    
+    font-size: 18px;
+}
+.filter-mobile{
+    position: absolute;
+    right: 0px;
+    top: 0;
+    width: 300px;
+    z-index: 999;
+    height: 100vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    background-color: #fff;
+  }
+  .mobile-buttom{
+    gap: 8px;
+  }
+
+.brands{
+    
+    padding: 15px;
+    
+}
+.filter-mobile-container{
+    display: none;
+}
+
+.categories{
+    
+    padding: 15px;
+}
+.card-list{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+}
+@media screen and (max-width: 1400px) {
+    .card-list{
+       
+        grid-template-columns: repeat(4, 1fr) ;
+    }
+}
+@media screen and (max-width: 1200px) {
+    .card-list{
+       
+        grid-template-columns: repeat(3, 1fr) ;
+    }
+}
+@media screen and (max-width: 1000px) {
+    .card-list{
+       
+        grid-template-columns: repeat(3, 1fr) ;
+    }
+}
+@media screen and (max-width: 860px) {
+    .card-list{
+       
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .product-container{
+        display: inline;
+    }
+    .filter-desktop{
+        display: none;
+    }
+    
+}
+@media (max-width: 860px) {
+    .filter-mobile-container{
+        display: block;
+    }
+    tree-link{
+        display: none;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .card-list{
+       
+        grid-template-columns: repeat(3, 1fr);
+    }
+   
+    .sidebar{ width: 100%;}
+}
+@media screen and (max-width: 570px) {
+    .card-list{
+       
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .container{
+        display: inline;
+    }
+    .sidebar{ width: 100%;}
+}
+.price-slider{
+    margin-top: 50px;
+    padding: 15px;
+}
+h2{
+    margin-top: 2rem;
+}
+span{
+    margin-left: 1.5rem;
+    
+
+}
+.next{
+    cursor: pointer;
+}
+
+view-result-card{
+    padding: 5px;
+    
+}
+.image-not-results{
+    width: 30%;
+}
+.product-head{
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff;
+    align-items: center;
+    padding: 8px;
+    border-radius: var(--border-radius-sm);
+    margin: 10px 0 10px 5px;
+   
+}
+.mobile-buttom{
+    width: 300px;
+    background-color: #007bff;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    right: 0;
+    bottom: 0;
+    padding: 16px 32px 16px 32px;
+    z-index: 1001;
+  }
+

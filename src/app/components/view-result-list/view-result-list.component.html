@@ -1,6 +1,6 @@
 
 <div class="container" *ngIf="isProductResponse">
-    <div>
+    <div class="">
         <app-menu-filter></app-menu-filter>
     </div>
     <!-- <div class="sidebar">
@@ -21,9 +21,13 @@
     </div> -->
     <div class="card-list-container"  >
 
-        <loading [loading]="loading && !isProductResponse"></loading>
-        <div *ngIf="isProductResponse" class="mt-4">
-            <h4>{{countProducts}} Resultados</h4>
+        <loading [loading]="loading "></loading>
+        <div *ngIf="isProductResponse">
+            <div class="product-head">
+                <div>{{countProducts}} Resultados</div>
+                <!-- <sort-select (sort)="sortProducts($event)"></sort-select> -->
+
+            </div>
             <div class="card-list" #productHeight ScrollNearEnd (nearEnd)="onNearEndScroll()">
                 <view-result-card  class="cards" *ngFor="let result of tecRes" [data]="result" [baseUrl]="result.url"></view-result-card>
             </div>
@@ -32,7 +36,7 @@
     </div>
     <!-- <div >{{productHeight.offsetHeight}}</div> -->
 </div>
-<div class="container d-flex justify-content-center mt-5" *ngIf="!isProductResponse">
+<div class="container d-flex justify-content-center mt-5" *ngIf="!isProductResponse && loading">
     <div class="text-center">
         <img class="image-not-results" src="../../../assets/img/lupa viendote con pesar grande.png" alt="">
         <h4 class="mt-4">No encontramos resultados para tu búsqueda</h4>

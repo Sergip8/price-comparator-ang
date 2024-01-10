@@ -1,46 +1,87 @@
-.menu{
-    padding-bottom: 50px;
+
+.main-menu{
+   
     padding-top: 20px;
     border-right: 1px solid #ccc;
     background-color: #d1eaff;
-    z-index: 10;
-
+    width: 200px;
+    text-transform: capitalize; 
 }
-.submenu_container{
-    z-index: 10;
-   
+a{
+    cursor:pointer;
+    color: black;
 }
 .submenu{
     padding-top: 20px;
     padding-left: 10px;
     background-color: #ffffff;
+     
+}
+.menu-sublist-header{
+    text-align: center;
+    text-transform:uppercase;
+
+}
+.menu-sublist-header h3{
+    cursor: pointer;
+}
+.menu{
+    display: flex;
+    height: 100vh;
+
+}
+.menu-sublist{
+    background-color: #ffffff;
+    
+    padding: 16px;
+    height: 85vh;
+    width: 600px;
     
 }
+.menu-items{
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+ 
+}
+.dropdown-item{
+   
+    padding: 8px;
+}
+.dropdown-item a {
+    color: var(--blue-1);
+    font-size: var(--fs-6) !important;
+    text-transform: capitalize;
+    -webkit-transition: var(--transition-timing);
+    -o-transition: var(--transition-timing);
+    transition: var(--transition-timing);
+    
+  }
+  .dropdown-subitem a {
+    color: var(--sonic-silver);
+    font-size: var(--fs-8) !important;
+  }
+  .dropdown-subitem a:hover{
+    text-decoration: underline;
+  }
 
 .menu_items{
-    padding: 2px 30px 2px 5px;
+    padding: 8px 30px 8px 16px;
+
 }
 .menu_items:hover{
     background-color: rgb(127, 82, 251);
     cursor: pointer;
     color: #ffffff;
 }
-.submenu_items{
-    cursor: pointer;
-    font-size: 13px;
-    padding: 2px 30px 2px 5px;
-}
-.submenu_items:hover{
-    text-decoration: underline;
-}
-.list{
-    width: 70%;
-}
-h6{
-    padding-top: 6px;
-}
+
 .select{
     background-color: rgb(127, 82, 251);
     color: #ffffff;
+}
+.especial-cat{
+    position: absolute;
+    width: 200px;
+    background-color: aquamarine;
+    margin-top: 100px;
 }
 

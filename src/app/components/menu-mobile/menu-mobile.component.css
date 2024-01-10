@@ -1,0 +1,37 @@
+
+.menu-mobile-container{
+    margin-left: 8px;
+}
+a{
+    text-decoration: none;
+    color: var(--onyx);
+}
+.dropdown-item{
+    display: flex;
+    justify-content: space-between;
+}
+
+.dropdown-item, .item{
+    margin-left: 20px;
+    padding: 16px 16px 16px 0;
+    font-size: medium;
+    cursor: pointer;
+
+}
+.subcategories{
+    margin-top: 32px;
+    margin-bottom: 32px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    color: var(--onyx);
+}
+.subcategories>mat-icon{
+    border-radius: 10px;
+    color: var(--onyx);
+    background-color: var(--blue-3);
+}
+.ver-todo{
+    color: var(--bittersweet);
+    cursor: pointer;
+}

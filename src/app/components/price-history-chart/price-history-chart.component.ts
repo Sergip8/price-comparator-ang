@@ -24,6 +24,7 @@ import {
     template: `
     <div id="chart" *ngIf="data">
   <apx-chart
+ 
     [series]="chartOptions.series"
     [chart]="chartOptions.chart"
     [markers]="chartOptions.markers"
@@ -35,7 +36,7 @@ import {
     `,
     styles: [`
     #chart {
-        max-width: 650px;
+       
         margin: 35px auto;
     }
     `]
@@ -47,13 +48,8 @@ import {
     @ViewChild("chart") chart: ChartComponent;
     public chartOptions: Partial<ChartOptions>;
     constructor(){
-       
     }
-    
-    
-    
-    
-    
+
     ngOnInit(): void {
         console.log(this.data)
         this.chartOptions = {
@@ -75,7 +71,7 @@ import {
               }
             },
             stroke: {
-              curve: "stepline"
+              curve: "smooth"
             },
             dataLabels: {
               enabled: false

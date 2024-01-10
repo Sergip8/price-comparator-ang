@@ -3,32 +3,49 @@
     <div class="product-details">
         <div class="product-card">
             <div class="photo">
+                <mat-icon [style.color]="isFavoriteSelected ? 'pink': ''" (click)="favoriteSelected(product.id)" class="favorite-icon" fontIcon="favorite"></mat-icon>
                 <img [src]="product.link_img">
                 
-                    <mat-icon [style.color]="isFavoriteSelected ? 'pink': ''" (click)="favoriteSelected(product.id)" class="favorite-icon" fontIcon="favorite"></mat-icon>
         
                   
               </div>
               <div class="description">
-                <h3>{{product.name}}</h3>
-                <h1 class="price"> {{product.price}}</h1>
+                <h3>{{product.name.slice(0, 75)}}</h3>
+                <h1 class="price"> {{product.price | currency:'COP':'$ ' : '1.0-0'}}</h1>
                 <div class="spe" *ngFor="let spe of productDescription | keyvalue; let i=index" >
                     <div><span *ngIf="spe.key !=i">{{spe.key}}:</span><span>{{spe.value}}</span></div>
                 </div>
-                <a [href]="product.url">Ir a tienda</a>
+                    <div *ngIf="isPartesPc">
+                        <a [href]="product.url">Ir a tienda</a>
+                        </div>
                 
               </div>
            
         </div>
+        <div class="store-list-container">
+           
+            <div *ngFor="let store of stores" class="store-list">
+               
+                <div class="p-store">{{store.store.toUpperCase()}} </div>
+                <div class="p-name">{{store.name.slice(0, 75)}}</div>
+                <div class="p-price">{{store.price | currency:'COP':'$ ' : '1.0-0'}}</div>
+                <div><a [href]="store.url"> Ir a tienda</a></div>
+
+             </div>
+            
+            </div>
         
-        <div>
-    
-            <price-history-chart [data]="productData"></price-history-chart>
-        </div>
+            
+            
+            </div>
+            
+            <div>
         
-    
-    </div>
+                <price-history-chart [data]="productData"></price-history-chart>
+            </div>
+  
+                
     <h2>Productos Similares</h2>    
     
-    <product-carousel [products]="productList"></product-carousel>
+    <product-carousel [isPartesPc]="isPartesPc" [products]="productList"></product-carousel>
 </div>

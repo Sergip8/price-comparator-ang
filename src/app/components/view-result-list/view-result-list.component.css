@@ -4,7 +4,7 @@
     grid-template-columns: 0.2fr 0.8fr;
 }
 .sidebar{
-    margin-top: 200px;
+    
     background-color: #fff;
     
     margin-right: 10px;
@@ -12,7 +12,7 @@
     border-radius: 5px;   
 }
 .card-list-container{
-    margin-top: 100px;
+   
 }
 .brands{
     
@@ -43,13 +43,13 @@
 @media screen and (max-width: 860px) {
     .card-list{
        
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
 }
-@media screen and (max-width: 670px) {
+@media screen and (max-width: 768px) {
     .card-list{
        
-        grid-template-columns: 1fr  1fr ;
+        grid-template-columns: repeat(3, 1fr);
     }
     .container{
         display: inline;
@@ -78,5 +78,14 @@ view-result-card{
 }
 .image-not-results{
     width: 30%;
+}
+.product-head{
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff;
+    align-items: center;
+    padding: 8px;
+    border-radius: var(--border-radius-md);
+    margin-bottom: 10px;
 }
 

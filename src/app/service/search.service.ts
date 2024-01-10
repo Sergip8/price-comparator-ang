@@ -2,19 +2,28 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { SearchPayload } from "../models/search-payload";
 import { BasicData } from "../models/basic-data";
-import { SearchTecPayload } from "../models/search-tec-payload";
+import { SearchTecPayload, SearchTecPayloadUnified } from "../models/search-tec-payload";
 import { PartesPc } from "../models/partes-pc";
 import { MercadoRequest } from "../models/mercado-request";
 import { MercadoData } from "../models/mercado-data";
 import { PartesPcData } from "../models/partes-pc-data";
-import { TecDataResponse } from "../models/tec-data-response";
+import { SuggestedProducts, TecDataResponse, TecDataResponseUnified } from "../models/tec-data-response";
+import { TvFilters } from "../models/tv-filters";
+import { ProductPayload } from "../models/product-payload";
+import { MenuService, StoreType } from "./menu-service";
 
 const baseUrl = "http://localhost:8080/api/";
 @Injectable({
   providedIn: "root",
 })
 export class SearchService {
+  getSuggestedProducts(search: string) {
+    return this.http.get<SuggestedProducts[]>(baseUrl+"results/suggested/"+search)
+  }
 
+  getStores(ids: string[]) {
+    return this.http.get<TecDataResponse[]>(baseUrl+"results/stores/"+ids)
+  }
 
   getDiscountTecProducts(cat: string) {
     return this.http.get<TecDataResponse[]>(baseUrl+`results/discount_tec?cat=${cat}`)
@@ -79,20 +88,15 @@ export class SearchService {
         `results/partes_pc/next?search=${search_value}&page=${page}&store=${store}`
     );
   }
-  getTecResult(
-    search_value: string,
-    page: number,
-    size: number,
-    brands: string[],
-    catfilter: string,
-    cat: string,
-    minPrice: number,
-    maxPrice: number
-  ) {
-    return this.http.get<SearchTecPayload>(
-      baseUrl +
-        `results/tecnologia?search=${search_value}&categoryFilter=${catfilter}&page=${page}&size=${size}&brands=${brands}&category=${cat}&minPrice=${minPrice}&maxPrice=${maxPrice}`
-    );
+  getTecResult(payload: ProductPayload) {
+    return this.http.post<SearchTecPayload>(
+      baseUrl + `results/tecnologia`, payload);
+  }
+  getTecResultUnified(payload: ProductPayload) {
+   
+    return this.http.post<SearchTecPayloadUnified>(
+      baseUrl + `results/tecnologia-unified`, payload);
+   
   }
   getMerResult(
     search_value: string,
@@ -102,21 +106,28 @@ export class SearchService {
     catfilter: string,
     cat: string,
     minPrice: number,
-    maxPrice: number
+    maxPrice: number,
+    sort: string
   ) {
     return this.http.get<SearchTecPayload>(
       baseUrl +
-        `results/mercado?search=${search_value}&categoryFilter=${catfilter}&page=${page}&size=${size}&brands=${brands}&category=${cat}&minPrice=${minPrice}&maxPrice=${maxPrice}`
+        `results/mercado?search=${search_value}&categoryFilter=${catfilter}&page=${page}&size=${size}&brands=${brands}&category=${cat}&minPrice=${minPrice}&maxPrice=${maxPrice}&sort=${sort}`
     );
   }
+ 
   getlistSubcategories(cat: string) {
     return this.http.get<TecDataResponse[]>(
       baseUrl + `results/cat/tecnologia?search=${cat}`
     );
   }
-  getRelatedProducts(name: string, path: string) {
-    return this.http.get<TecDataResponse[]>(
-      baseUrl + `results/${path}/related/${name}`
+  getRelatedProducts(category: string) {
+    return this.http.post<TecDataResponse[]>(
+      baseUrl + `results/category/related`, category
+    );
+  }
+  getRelatedPartesPc(category: string) {
+    return this.http.post<TecDataResponse[]>(
+      baseUrl + `partes-pc/related`, category
     );
   }
   getMerRelatedProducts(name: string) {

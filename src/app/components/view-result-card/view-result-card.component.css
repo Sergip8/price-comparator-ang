@@ -7,7 +7,7 @@ a{
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-  
+    
    height: 40px;
 }
 
@@ -28,6 +28,7 @@ a{
     background-color: white;
     border-radius: var(--border-radius-md);
     height: 310px;
+    
   
 }
 .card-img-top{
@@ -55,5 +56,12 @@ a{
 }
 .price-box{
     height: 40px;
+}
+.stores{
+   
+    display: flex;
+}
+.store-img{
+    margin-right: 5px;
 }
 

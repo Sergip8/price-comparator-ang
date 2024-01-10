@@ -10,7 +10,7 @@ export class LoadingComponent {
   @Input() loading: boolean
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes["loading"])
+   
     this.loading = changes["loading"].currentValue
   }
 }

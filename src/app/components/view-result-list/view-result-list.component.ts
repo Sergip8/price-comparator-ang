@@ -7,6 +7,9 @@ import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { TecDataResponse } from "src/app/models/tec-data-response";
 import { BrandFilterService } from "src/app/service/brand-filter.service";
 import { MenuService } from "src/app/service/menu-service";
+import { SortService } from "src/app/service/sort-products.service";
+import { TvFilters } from "src/app/models/tv-filters";
+import { ProductPayload } from "src/app/models/product-payload";
 
 @Component({
   selector: "app-view-result-list",
@@ -14,12 +17,14 @@ import { MenuService } from "src/app/service/menu-service";
   styleUrls: ["./view-result-list.component.css"],
 })
 export class ViewResultListComponent implements OnInit{
+
   brandsSelected = [];
   split_cat = 0;
   size = 36;
   page = 0;
   search_value = "";
   category_value = "";
+  sortValue = ""
   countProducts = 0
   tecRes: TecDataResponse[];
   categories = [];
@@ -31,6 +36,9 @@ export class ViewResultListComponent implements OnInit{
   categoryParam: string
   currentRoute: string;
   isProductResponse: boolean = true
+  tvFilterSelected: TvFilters
+  productPayload:ProductPayload = new ProductPayload
+
 
   
   @ViewChild('productHeight') elementView: ElementRef;
@@ -40,7 +48,8 @@ export class ViewResultListComponent implements OnInit{
     private activatedRoute: ActivatedRoute,
     public brandFilter: BrandFilterService,
     private menuService: MenuService,
-    private router: Router
+    private router: Router,
+    private sortService: SortService
   ) {
     this.tecRes = [];
    brandFilter.getBrands()
@@ -52,43 +61,17 @@ export class ViewResultListComponent implements OnInit{
     console.log(this.currentRoute)
     let queryBrands = "";
     let queryPriceRange = ""
-    this.search_value = url.searchParams.get("search");
+    let tv_filters = ""
+    this.search_value = url.searchParams.get("q");
     this.category_value = url.searchParams.get("cat");
     queryBrands = url.searchParams.get("brands");
     queryPriceRange = url.searchParams.get("priceRange");
+    tv_filters = url.searchParams.get("tv_filters")
     this.flag = true;
-    if(queryPriceRange){
-      this.flag = false;
-      this.priceRangeTemp = queryPriceRange.split(",").map(Number)
-      brandFilter.priceRange.next(this.priceRangeTemp)
-      this.getSearchResult();
-    }
-    else
-    this.priceRange = this.priceRangeTemp
-    if (queryBrands) {
-    
-      this.flag = false;
-      this.brandsSelected = queryBrands.split(",");
-      brandFilter.brandsSelected.next(this.brandsSelected);
-      
-      }
-      else{
-      queryBrands = ""
-      brandFilter.brandsSelected.next([]);
-      }
 
-    if(!this.category_value)
-      this.category_value = ""
-    else{
-      this.priceRange = this.priceRangeTemp
-      
-      this.categoryParam = ""
-      this.getSearchResult();
-    }
-   
     if (this.search_value) {
       this.priceRange = this.priceRangeTemp
-      
+      this.productPayload.search = this.search_value
       this.categoryParam = ""
       this.getSearchResult();
 
@@ -110,7 +93,7 @@ export class ViewResultListComponent implements OnInit{
         const joinCat = cat.join("/")
         console.log("gato unido "+ joinCat)
         menuService.categoryLink.next(joinCat)
-        this.categoryParam = joinCat
+        this.productPayload.category = joinCat
         //console.log(this.categoryParam)
         
         this.getSearchResult()
@@ -119,6 +102,48 @@ export class ViewResultListComponent implements OnInit{
        
       });
     }
+    if(tv_filters){
+      try {
+        const filters = JSON.parse(tv_filters)
+        brandFilter.setFilters(filters)
+       
+        console.log(this.productPayload.filter)
+        this.getSearchResult();
+      } catch (error) {
+        
+      }
+    }
+   
+    if(queryPriceRange){
+      this.flag = false;
+      this.productPayload.priceRange = queryPriceRange.split(",").map(Number)
+      brandFilter.updatePriceRange(this.priceRangeTemp)
+      this.getSearchResult();
+    }
+    else
+    this.priceRange = this.priceRangeTemp
+    if (queryBrands) {
+    
+      this.flag = false;
+      this.productPayload.brands = queryBrands.split(",");
+      brandFilter.brandsSelected.next(this.productPayload.brands);
+      
+      }
+      else{
+      queryBrands = ""
+      brandFilter.brandsSelected.next([]);
+      }
+
+    if(!this.category_value)
+      this.category_value = ""
+    else{
+      this.priceRange = this.priceRangeTemp
+      
+      this.categoryParam = ""
+      this.getSearchResult();
+    }
+   
+   
   }
 
   ngOnInit(): void {
@@ -132,39 +157,33 @@ export class ViewResultListComponent implements OnInit{
     //   this.tecRes = JSON.parse(results)
     //   this.search_value =  this.tecRes.query
     // }
+  
   }
 
 
   getSearchResult() {
-    if(this.currentRoute.includes("/tecnologia")){
-
+    this.loading = true
       this.service
         .getTecResult(
-          this.search_value,
-          this.page,
-          this.size,
-          this.brandsSelected,
-          this.category_value,
-          this.categoryParam,
-          this.priceRangeTemp[0],
-          this.priceRangeTemp[1]
+       this.productPayload
         )
         .subscribe({
           next: (data) => {
-            //console.log(this.brandFilter.priceRange.value);
+            console.log(data)
             this.tecRes.push(...data.results);
             this.countProducts = data.count
             this.isProductResponse = this.tecRes.length != 0
+           
   
             if (this.brands.length == 0 && this.flag) {       
-              this.brandFilter.brands.next(data.brands);
+              this.brandFilter.updateFilterBrands(data.brands);
               this.brandFilter.updateBrands(data.brands)
   
             }
             if(this.flag){
               console.log("####Entro##");
-              this.brandFilter.priceRange.next(data?.priceRange);
-              this.brandFilter.priceRangeState.next(data?.priceRange);
+              this.brandFilter.updatePriceRange(data?.priceRange);
+              this.brandFilter.updateSessionPriceRangeState(data?.priceRange);
               this.brandFilter.updatePriceRangeState(data?.priceRange)
               console.log(this.priceRange)
             }
@@ -186,61 +205,13 @@ export class ViewResultListComponent implements OnInit{
             this.loading = false;
           },
         });
-    }
-    else{
-      this.service
-      .getMerResult(
-        this.search_value,
-        this.page,
-        this.size,
-        this.brandsSelected,
-        this.category_value,
-        this.categoryParam,
-        this.priceRangeTemp[0],
-        this.priceRangeTemp[1]
-      )
-      .subscribe({
-        next: (data) => {
-          //console.log(this.brandFilter.priceRange.value);
-          this.tecRes.push(...data.results);
-          this.countProducts = data.count
-
-          if (this.brands.length == 0 && this.flag) {       
-            this.brandFilter.brands.next(data.brands);
-            this.brandFilter.updateBrands(data.brands)
-
-          }
-          if(this.flag){
-            console.log("####Entro##");
-            this.brandFilter.priceRange.next(data?.priceRange);
-            this.brandFilter.priceRangeState.next(data?.priceRange);
-            this.brandFilter.updatePriceRangeState(data?.priceRange)
-            console.log(this.priceRange)
-          }
-          
-          this.brandFilter.categories.next(
-            data.categories.map((c) => {
-              let cf = c.split("/");
-              return cf[cf.length - 2];
-            })
-          );
-          // if (this.searchMethod == 'category' && data.categories[0].startsWith("/"+ this.search_value))
-          //   this.split_cat = -1
-
-          this.loading = false;
-          //console.log(this.tecRes);
-        },
-        error: (e) => {
-          //console.log(e);
-          this.loading = false;
-        },
-      });
-    }
+  
   }
 
 
 onNearEndScroll(){
-  this.page += 1;
+  //this.page += 1;
+  this.productPayload.page +=1 
   this.getSearchResult();
 }
 onPriceRange(){
@@ -250,6 +221,13 @@ onPriceRange(){
  //console.log(this.priceRange)
   this.getSearchResult()
 
+}
+sortProducts(sortSelected: string) {
+  this.productPayload.page = 0
+  this.tecRes = []
+  console.log(sortSelected)
+  this.productPayload.sort = sortSelected
+  this.getSearchResult()
 }
 
 }

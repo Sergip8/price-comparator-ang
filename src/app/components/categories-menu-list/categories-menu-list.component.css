@@ -16,3 +16,24 @@ li{
     font-size: 12px;
     
 }
+ul{
+    padding-left: 8px;
+}
+a{
+    cursor: pointer;
+}
+a:hover{
+    text-decoration: underline !important;
+}
+
+a::before{
+    content: "|_";
+    
+    margin-right: 2px;
+}
+@media screen and (max-width: 860px) {
+    ul{
+    padding-top: 8px;
+    padding-bottom: 8px;
+    }
+}

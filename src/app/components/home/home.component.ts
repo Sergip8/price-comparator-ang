@@ -46,9 +46,9 @@ export class HomeComponent implements OnInit {
   }
 
   getDiscountTecProducts(){
-    this.searchService.getDiscountTecProducts("televisores").subscribe({
+    this.searchService.getDiscountTecProducts("tecnologia/tv-audio-y-video/televisores").subscribe({
       next: data => {this.productsDiscount = data
-      console.log(this.productsDiscount)}
+      console.log(data)}
     })
   }
   getPartesPcSample(){

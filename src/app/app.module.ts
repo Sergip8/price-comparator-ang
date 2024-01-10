@@ -40,9 +40,20 @@ import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-s
 
 import {GoogleLoginProvider,FacebookLoginProvider} from '@abacritt/angularx-social-login';
 import {  GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
-import { environment } from 'src/environments/environment';
+import { environment, firebaseConfig } from 'src/environments/environment';
 import {CookieService} from 'ngx-cookie-service';
 import { ProductFavoritesComponent } from './components/navbar/favorite-view';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getAuth, provideAuth } from '@angular/fire/auth';
+import { RegisterComponent } from './components/register/register.component';
+import { SocialButtoms } from './components/navbar/social-buttons';
+import { MenuMobileComponent } from './components/menu-mobile/menu-mobile.component';
+import { SortSelect } from './components/view-result-list copy/sort-select';
+import { FilterView } from './components/menu-filter/filter-view';
+import { ViewResultListUComponent } from './components/view-result-list copy/view-result-listU.component';
+import { TreeLinks } from './components/view-result-list copy/tree-link';
+import { UserButtoms } from './components/navbar/user-buttoms';
+import { SuggestedResults } from './components/search-bar/suggested-results';
 
 @NgModule({
   declarations: [
@@ -68,11 +79,21 @@ import { ProductFavoritesComponent } from './components/navbar/favorite-view';
     ProductDetailComponent,
     LoginComponent,
     ProductFavoritesComponent,
+    SocialButtoms,
+    SortSelect,
+    FilterView,
+    TreeLinks,
+    UserButtoms,
+    SuggestedResults,
+
+    ViewResultListUComponent,
     
     ClickOutsideDirective,
     FallbackImgDirective,
     InfiniteScrollDirective,
-    ModalDirective
+    ModalDirective,
+    RegisterComponent,
+    MenuMobileComponent
   ],
   imports: [
     BrowserModule,
@@ -87,7 +108,9 @@ import { ProductFavoritesComponent } from './components/navbar/favorite-view';
     DragScrollModule,
     NgApexchartsModule,
     SocialLoginModule ,
-    GoogleSigninButtonModule
+    GoogleSigninButtonModule,
+    provideFirebaseApp(() => initializeApp(firebaseConfig)),
+    provideAuth(() => getAuth())
  
   ],
   providers: [

@@ -2,11 +2,13 @@ import { Component, EventEmitter, OnInit, Output } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { CategoryService } from "../../service/category.service";
 import { Router } from "@angular/router";
+import { SearchService } from "src/app/service/search.service";
+import { SuggestedProducts } from "src/app/models/tec-data-response";
 
 @Component({
   selector: "search-bar",
   template: `
-    <div class="d-flex">
+    <div class="search-container">
       <!-- <div
         class="col-2"
         (mouseover)="[(show_menu = true)]"
@@ -23,78 +25,92 @@ import { Router } from "@angular/router";
           </div>
           </div>
         </div> -->
-      <div class="">
-        <select
-          #type
-          class="form-control"
-          aria-label="Default select example"
-          (select)="searchCategory = type.value"
-          (change)="searchCategory = type.value"
-        >
-          <option value="tec" selected>Tecnologia</option>
-          <option value="ppc" >PartesPc</option>
-          <option value="mer">Mercado</option>
 
-        </select>
-      </div>
-
-      <div class="search-input">
+      <div
+       class="search-input"
+       clickOutside
+          (onClickOutside)="[showSuggested = false, suggestedProducts = []]"
+          openModal
+          [appOscurecerPagina]="showSuggested && suggestedProducts.length>0" >
         <input
           type="search"
           class="form-control"
           [formControl]="search"
           placeholder="buscar"
           (keydown.enter)="getSearchSelected(search.value)"
+          (focus)="showSuggested = true"
         />
-        
-        <button class="search-btn " (click)="getSearchSelected(search.value)">
-            <mat-icon fontIcon="search"></mat-icon>
+        <div
+         
+          class="suggested-container" *ngIf="showSuggested && suggestedProducts.length>0">
+          <div *ngFor="let sp of suggestedProducts" >
+            <suggested-results [suggestedList]="sp"></suggested-results> 
+          
+          </div>
 
-          </button>
-        <div class="search-list">
+        </div>
+        <div>
+          <button class="search-btn" (click)="getSearchSelected(search.value)">
+              <mat-icon fontIcon="search"></mat-icon>
+  
+            </button>
+
+        </div>
+        <!-- <div class="search-list">
           <search-bar-result
             [query]="getCategories"
             (resultSelected)="getSearchSelected($event)"
           ></search-bar-result>
-        </div>
+        </div> -->
       </div>
     </div>
   `,
   styles: [
     `
+    .search-container{
+      display:flex;
+      width: 100%;
+      
+      justify-content: space-between;
+    }
     .search-input{
+      position:relative;
+      z-index:999;
       margin-left:10px;
-      width: 80%
+      width: 100%;
+      max-width: 800px;
+      
     }
       .search {
         text-align: center;
       }
-      .menu, .search-list {
-        position: absolute;
-        z-index: 10;
-        background: #fff;
-        
-        width: 40%;
-        box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2); 
+      .suggested-container{
+        position:absolute;
+        margin-top:8px;
+        width: 100%;
+          background-color: #fff;
+          border-radius: var(--border-radius-sm);
+          padding: 5px
       }
+     
       .search-btn {
   background: var(--white);
   border:none;
   position: absolute;
   top: 50%;
-  right: 2px;
+  right: 0;
   -webkit-transform: translateY(-50%);
       -ms-transform: translateY(-50%);
           transform: translateY(-50%);
   color: var(--onyx);
   font-size: 18px;
-  padding: 6px 10px 3px 10px;
+  padding: 5px 10px 3px 10px;
   -webkit-border-radius: var(--border-radius-md);
           border-radius: var(--border-radius-md);
   -webkit-transition: color var(--transition-timing);
   -o-transition: color var(--transition-timing);
   transition: color var(--transition-timing);
-  margin-right: 15px;
+ 
 }
 
 .search-btn:hover { color: var(--blue-1); }
@@ -121,13 +137,18 @@ export class SearchBarComponent implements OnInit {
   searchCategory = "tec"
   search = new FormControl();
   getCategories: string[] = [];
-  constructor(private categories: CategoryService, private router: Router) {}
+  suggestedProducts: SuggestedProducts[] = []
+  showSuggested: boolean = true
+
+  constructor(private categories: CategoryService, private router: Router, private searchService: SearchService) {}
 
   ngOnInit(): void {
     this.search.valueChanges.subscribe({
       next: (val) => {
+        console.log(val)
         this.getCategories = [];
         if (val.length >= 2) {
+          this.getSuggestedProducts(val)
           this.categories.products.forEach((c) => {
             if (c.startsWith(val)) {
               if (this.getCategories.length < 6) {
@@ -139,23 +160,20 @@ export class SearchBarComponent implements OnInit {
       },
     });
     //val => this.search_query.emit(val)
-    console.log(this.show_menu);
   }
-
   getCategory(value: string) {
     this.category.emit(value);
   }
-
   getSearchSelected(search: string) {
-    if(this.searchCategory == "ppc")
-      this.router.navigateByUrl(`/partes_pc/${search}`)
-    //this.search_query.emit(search);
-    if(this.searchCategory == "tec")
-    this.router.navigate(['/tecnologia'], {queryParams: {search: search}})
-    if(this.searchCategory == "mer")
-    this.router.navigate(['/mercado'], {queryParams: {search: search}})
-
+    this.showSuggested = false
+    this.router.navigate(['/search'], {queryParams: {q: search}})
   }
-
-  searchType(value: string) {}
+  getSuggestedProducts(search: string){
+    this.showSuggested = true
+    this.searchService.getSuggestedProducts(search).subscribe({
+      next: data => {
+        this.suggestedProducts = data}
+    })
+  }
+   
 }

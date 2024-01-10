@@ -16,7 +16,7 @@ import { SearchService } from 'src/app/service/search.service';
       <app-partes-pc-list class="partes-pc-card mb-1" *ngFor="let partes of partesPcHome" [partesPc]="partes" drag-scroll-item></app-partes-pc-list>
     </div>
     <div *ngIf="products" >
-      <view-result-card class="product-card mb-1" *ngFor="let p of products; let i = index" drag-scroll-item [data]="p" ></view-result-card>
+      <view-result-card [isPartesPc]="isPartesPc"  class="product-card mb-1" *ngFor="let p of products; let i = index" drag-scroll-item [data]="p" ></view-result-card>
     </div>
   </drag-scroll>
 </div>
@@ -58,6 +58,7 @@ export class ProductCarouselComponent implements OnInit {
   @Input() category: string
   @Input() partesPcHome: PartesPcData[]
   @Input() title: string
+  @Input() isPartesPc: boolean
 
   constructor(private searchService: SearchService, private scroll: ViewportScroller){
 

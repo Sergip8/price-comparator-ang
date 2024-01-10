@@ -1,0 +1,36 @@
+<div class="menu-mobile-container">
+
+    <div  *ngIf="!subcategory_1 && !subcategory_2" >
+        
+        <div class="menu-title" (click)="navigateSubcategory(item.key)" [@subcat]="subcategory_2" class="dropdown-item" *ngFor="let item of menuCategories | keyvalue">
+           
+                <a >{{menuService.convertAccentString(item.key)}}</a>
+                <mat-icon fontIcon="keyboard_arrow_right"></mat-icon>
+            
+        </div>
+    </div>
+    <div *ngIf="subcategory_1 && !subcategory_2 " >
+        <div class="subcategories">
+            <mat-icon (click)="subcategory_1 = null" fontIcon="keyboard_arrow_left"></mat-icon><div>{{menuService.convertAccentString(subcategory_1.toUpperCase())}}</div> <div class="ver-todo" (click)="navigateTo(subcategory_1)" >Ver todo</div>
+        </div>
+        <div (click)="subcategory_2 = subItem.key.toString()" [@subcat]="subcategory_1" class="dropdown-item" *ngFor="let subItem of menuCategories[subcategory_1] | keyvalue">
+          <a  >{{menuService.convertAccentString(subItem.key.toString())}}</a>
+          <mat-icon fontIcon="keyboard_arrow_right"></mat-icon>
+        </div>
+        
+    </div>
+    <div *ngIf="subcategory_1 && subcategory_2">
+        <div class="subcategories">
+            <mat-icon (click)="subcategory_2 = null" fontIcon="keyboard_arrow_left"></mat-icon><div>{{menuService.convertAccentString(subcategory_2.toUpperCase())}}</div> <div class="ver-todo"  (click)="navigateTo(subcategory_1,subcategory_2)" >Ver todo</div>
+        </div >
+        <div (click)="navigateTo(subcategory_1,subcategory_2, subItem.key.toString())" [@subcat]="subcategory_2" class="item" *ngFor="let subItem of menuCategories[subcategory_1][subcategory_2] | keyvalue">
+          <a  >{{menuService.convertAccentString(subItem.key.toString())}}</a>
+        </div>
+        
+    </div>
+        <div class="dropdown-panel">
+    
+          
+        </div>
+</div>
+ 

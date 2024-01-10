@@ -14,6 +14,7 @@ export class ViewResultCardComponent implements OnInit {
   @Input() baseUrl: string = ""
   @Input() store: string = ""
   @Input() styles: any
+  @Input() isPartesPc: boolean
   productName = ""
 
   @Output() scroll_value = new EventEmitter<number>()
@@ -50,11 +51,25 @@ export class ViewResultCardComponent implements OnInit {
   }
 
   routeToDetails(data: any){
-    console.log(this.currentRoute)
-    this.router.navigate([`/${this.currentRoute.split("/")[1]}/product-details/`+data.id],{
+    console.log(data)
+    this.router.navigate([`/product-details/`+data.id],{
       state:{
-        data: data
+        data: data,
+        isPartesPc: this.isPartesPc
       }
     })
+  }
+  getNameImage(id: string): string{
+    const id_split = id.split("-")[0]
+    switch(id_split){
+      case "F": return "Falabella"
+      case "A": return "Alkosto"
+      case "E": return "Exito"
+      case "J": return "Jumbo"
+      case "O": return "Olimpica"
+      case "L": return "Linio"
+      default: return ""
+    }
+    
   }
 }

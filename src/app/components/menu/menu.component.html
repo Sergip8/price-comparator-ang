@@ -1,26 +1,34 @@
-<div class="menu_container">
-    <div class="d-flex">
-        <div class="menu">
-            <div class="menu_items" [ngClass]="m.key == selected ? 'select' : ''" *ngFor="let m of menu | keyvalue" (mouseover)="showSubmenu(m.key)">
-                {{m.key}}
+
+    <div class="menu" >
+        <div class="main-menu" >
+            <div [class]="item == 'partes-pc' ? 'especial-cat': ''" class="menu_items" *ngFor="let item of mainCategories" [ngClass]="item == mainCategorySelected ? 'select' : ''" (mouseover)="showSubmenu(item)">
+                {{menuService.convertAccentString(item.toString())}}
+
             </div>
             
         </div>
-        <div class="d-flex flex-column submenu_container">
+        <div class="menu-sublist" *ngIf="subMenu">
+            <div class="menu-sublist-header">
+                <h3 (click)="navigateTo(mainCategorySelected)">{{menuService.convertAccentString(mainCategorySelected)}}</h3>   
+            </div>
+            <div class="menu-items">
+                <div class="dropdown-item" *ngFor="let subItem of subMenu | keyvalue">
+                    <a (click)="navigateTo(mainCategorySelected, subItem.key.toString())">{{menuService.convertAccentString(subItem.key.toString())}}</a>
+                        <div class="dropdown-subitem" style="margin-left: 20px;" *ngFor="let subsubItem of subItem.value | keyvalue">
+                    <a (click)="navigateTo(mainCategorySelected, subItem.key.toString(),subsubItem.key.toString())">{{menuService.convertAccentString(subsubItem.key.toString())}}</a>
+                  </div>
+                </div>               
+
+            </div>
+        </div>
+
+        </div>
+        <!-- <div class="d-flex flex-column submenu_container">
             <div>
     
-                <div class="submenu d-flex" *ngIf="selected == 'Mercado'" (mouseover)="showSubmenu(selected)">
-                    <div class="list" *ngFor="let m of menu.Mercado | keyvalue">
-                        
-                        <div (click)="getCategory(sm.value)" class="submenu_items" *ngFor="let sm of m.value | keyvalue">
-                        {{sm.value}}
-                        </div>
         
-                    </div>
-                   
-                </div>
                 
-                <div class="submenu d-flex" *ngIf="selected == 'Tecnologia'" (mouseover)="showSubmenu(selected)">
+                <div class="submenu d-flex" (mouseover)="showSubmenu(selected)">
                     <div class="list" *ngFor="let m of menu.Tecnologia | keyvalue">
                         
                         <div (click)="getCategory(sm.value)" class="submenu_items" *ngFor="let sm of m.value | keyvalue">
@@ -32,8 +40,8 @@
                 </div>
             </div>
 
-        </div>
+        </div> -->
     
-    </div>
+   
 
-</div>
+

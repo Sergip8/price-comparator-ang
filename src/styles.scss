@@ -17,12 +17,16 @@ body{
      --onyx: hsl(0, 0%, 27%);
      --blue-2:hsl(223, 24%, 63%);
      --blue-3:hsl(223, 40%, 86%);
+     --blue-4:hsl(212, 100%, 97%);
      --black:hsl(0, 0%, 9%);
      --green-discount:hsl(134, 71%, 41%);
      --favorite-selected: hsl(331, 100%, 82%);
-     --favorite: hsl(330, 67%, 94%);
+     --favorite: hsl(311, 68%, 94%);
      --gutter: 20px;
-     
+     --filter-hover: rgb(238, 244, 255);
+     --filter-background: rgb(243, 248, 252);
+     --filter-track-scroll-background: rgb(243, 248, 252);
+     --filter-thumb-scroll--background: rgb(125, 165, 198);
    
      /**
       * typography
@@ -39,7 +43,8 @@ body{
      --fs-9: 0.75rem;
      --fs-10: 0.688rem;
      --fs-11: 0.625rem;
-   
+     
+
      --weight-300: 300;
      --weight-400: 400;
      --weight-500: 500;

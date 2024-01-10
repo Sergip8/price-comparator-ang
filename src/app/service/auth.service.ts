@@ -1,10 +1,16 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { Injectable, inject } from "@angular/core";
 import { BehaviorSubject, Observable, from } from "rxjs";
 import { environment } from "src/environments/environment";
 
 import { GoogleLoginProvider, SocialAuthService } from "@abacritt/angularx-social-login";
 import { User } from "../models/user";
+import { Auth, AuthProvider, FacebookAuthProvider, GoogleAuthProvider, UserCredential, authState, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from "@angular/fire/auth";
+
+export interface Credentials{
+  email: string
+  password: string
+}
 
 const apiUrl = "http://localhost:8080";
 const header = new HttpHeaders().set('Content-type', 'application/json');
@@ -12,46 +18,82 @@ const header = new HttpHeaders().set('Content-type', 'application/json');
     providedIn: "root",
   })
   export class AuthService{
+    private auth: Auth = inject(Auth)
 
-    private baseUrl = environment.apiUrl
-    private loginStatus = new BehaviorSubject<boolean>(false)
-    private userLogged = new BehaviorSubject<User>(this.getUser())
+    readonly authState$ = authState(this.auth)
 
-    constructor(private http: HttpClient, private socialAuthService: SocialAuthService){}
-
-    get user$() {
-      return this.userLogged.asObservable();
-   }
-    socialGoogleLogin(){
-     this.socialAuthService.getAccessToken(GoogleLoginProvider.PROVIDER_ID).then(token =>{
-      console.log(token)
-      this.verifyToken(token)
-     })
+    signUpWithEmailAndPassword(credentials: Credentials): Promise<UserCredential>{
+      return createUserWithEmailAndPassword(this.auth, credentials.email, credentials.password)
     }
 
-login(){
-  this.socialAuthService.authState.subscribe({
-    next: user =>{
-      localStorage.setItem("user", JSON.stringify(user))
-      this.userLogged.next({username: user.name, email:user.email})
-      this.loginStatus.next(true)
-      console.log(user);
-
-    },
-    error: e =>{
-      this.logout()
+    LogInWithEmailAndPassword(credential: Credentials){
+      return signInWithEmailAndPassword(this.auth, credential.email, credential.password)
     }
-  });
-}
-logout(){
-  this.socialAuthService.signOut().then( user =>{
-    localStorage.removeItem("user")
-    this.loginStatus.next(false)
-  })
-}
-refreshToken(): void {
-  this.socialAuthService.refreshAuthToken(GoogleLoginProvider.PROVIDER_ID);
-}
+
+    LogOut(): Promise<void>{
+      return this.auth.signOut()
+    }
+    signInWithGoogleProvider(): Promise<UserCredential> {
+      const provider = new GoogleAuthProvider();
+  
+      return this.callPopUp(provider);
+    }
+    async callPopUp(provider: AuthProvider): Promise<UserCredential> {
+      try {
+        const result = await signInWithPopup(this.auth, provider);
+  
+        return result;
+      } catch (error: any) {
+        return error;
+      }
+    }
+
+    signInWithFacebookProvider(){
+      const provider = new FacebookAuthProvider()
+
+      return this.callPopUp(provider)
+
+    }
+
+//     private baseUrl = environment.apiUrl
+//     private loginStatus = new BehaviorSubject<boolean>(false)
+//     private userLogged = new BehaviorSubject<User>(this.getUser())
+
+//     constructor(private http: HttpClient, private socialAuthService: SocialAuthService){}
+
+//     get user$() {
+//       return this.userLogged.asObservable();
+//    }
+//     socialGoogleLogin(){
+//      this.socialAuthService.getAccessToken(GoogleLoginProvider.PROVIDER_ID).then(token =>{
+//       console.log(token)
+//       this.verifyToken(token)
+//      })
+//     }
+
+// login(){
+//   this.socialAuthService.authState.subscribe({
+//     next: user =>{
+//       localStorage.setItem("user", JSON.stringify(user))
+//       this.userLogged.next({username: user.name, email:user.email})
+//       this.loginStatus.next(true)
+//       console.log(user);
+
+//     },
+//     error: e =>{
+//       this.logout()
+//     }
+//   });
+// }
+// logout(){
+//   this.socialAuthService.signOut().then( user =>{
+//     localStorage.removeItem("user")
+//     this.loginStatus.next(false)
+//   })
+// }
+// refreshToken(): void {
+//   this.socialAuthService.refreshAuthToken(GoogleLoginProvider.PROVIDER_ID);
+// }
 
     
   //   loginWithGoogle(credential: string) {
@@ -108,28 +150,29 @@ refreshToken(): void {
       loggedIn(): boolean {
          return !!localStorage.getItem("user") 
     }
-
-    verifyToken(token: string){
+    
+    // verifyToken(token: string){
       
-        const header = {"Authorization": "Bearer " + token}
-        console.log(token)
-       this.http.get<any>(environment.apiUrl+"users/google", {headers: header}).subscribe({
-        next: user => {
-          localStorage.setItem("G-user", JSON.stringify(user))
-          console.log(user)
-        },
-        error : () => this.logout()
-       })
+    //     const header = {"Authorization": "Bearer " + token}
+    //     console.log(token)
+    //    this.http.get<any>(environment.apiUrl+"users/google", {headers: header}).subscribe({
+    //     next: user => {
+    //       localStorage.setItem("G-user", JSON.stringify(user))
+    //       console.log(user)
+    //     },
+    //     error : () => this.logout()
+    //    })
       
      
-    }
-    getUser():User{
-      return {email:JSON.parse(localStorage.getItem("user"))?.email,
-      username: JSON.parse(localStorage.getItem("user"))?.name
-       }
-    }
+    // }
+    // getUser():User{
+    //   return {email:JSON.parse(localStorage.getItem("user"))?.email,
+    //   username: JSON.parse(localStorage.getItem("user"))?.name
+    //    }
+    // }
     getEmail():string{
       return JSON.parse(localStorage.getItem("user"))?.email
     }
     
   }
+

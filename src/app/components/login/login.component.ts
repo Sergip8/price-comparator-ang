@@ -1,8 +1,13 @@
-import { Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, NgZone, OnInit, Output, ViewChild } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { AuthService } from 'src/app/service/auth.service';
+import { AuthService, Credentials } from 'src/app/service/auth.service';
 
+interface SignUpForm {
+  email: FormControl<string>;
+  password: FormControl<string>;
+}
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -10,17 +15,51 @@ import { AuthService } from 'src/app/service/auth.service';
 })
 export class LoginComponent implements OnInit {
 
+
   auth2: any;
-  
-  constructor(private authService: AuthService, private router: Router, private ngZone: NgZone){}
+  hidePass = true
+  @Output() signup = new EventEmitter()
+  @Output() loginOK = new EventEmitter<boolean>(false)
+
+  form: FormGroup<SignUpForm> = this.formBuilder.group({
+
+    email: this.formBuilder.control('', {
+      validators: [Validators.required, Validators.email],
+      nonNullable: true,
+    }),
+    password: this.formBuilder.control('', {
+      validators: Validators.required,
+      nonNullable: true,
+    }),
+  });
+
+  constructor(private authService: AuthService, private router: Router, private formBuilder: FormBuilder){}
 
 
+  get emailErrors():string | boolean {
+    const control = this.form.controls.email
+    const isInvalid = control.invalid && control.touched
+
+    if(isInvalid){
+      return control.hasError('required') ? 'El email es requerido': 'El email no es valido'
+    }
+    return false
+  }
 
 
   ngOnInit() {
- this.authService.login()
+ //this.authService.login()
  //this.authService.socialGoogleLogin()
   }
+  async login(){
+    try {
+     await this.authService.LogInWithEmailAndPassword(<Credentials>this.form.value)
+      this.loginOK.emit()
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
 
 
   // onGoogleLogin(){

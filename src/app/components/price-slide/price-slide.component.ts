@@ -20,32 +20,34 @@ export class PriceSlideComponent implements OnInit {
   minValue = 20;
   maxValue = 50;
   constructor(public filterService: BrandFilterService){
-    this.filterService.priceRange.subscribe(pr =>{
-    this.minValue = pr[0]
-     this.maxValue = pr[1]
-    })
-    this.filterService.priceRangeState.subscribe(spr =>{
+this.updatePriceRange()
+    this.filterService.priceRangeState$.subscribe(spr =>{
       this.min = spr[0]
-      this.max = spr[1]
+      this.max = spr[1]+100
       })
+      this.step = Math.trunc(this.max/this.min*5)
   }
   
   
   ngOnInit(): void {
     
-    this.step = Math.trunc(this.max/this.min*10)
-    console.log(this.maxValue)
-    console.log(this.minValue)
-    console.log(this.filterService.priceRange.value)
+    //console.log(this.filterService.priceRange.value)
     //console.log(this.filterService.setPriceRange.value)
 
   }
   
   onSliderChanges(){
     
-    this.filterService.priceRange.next([this.minValue, this.maxValue])
+    this.filterService.updatePriceRange([this.minValue, this.maxValue])
+    //this.updatePriceRange()
     this.selectedPriceRange.emit([this.minValue, this.maxValue])
     
+  }
+  updatePriceRange(){
+    this.filterService.priceRange$.subscribe(pr =>{
+      this.minValue = pr[0]
+       this.maxValue = pr[1]
+      })
   }
 
 }

@@ -1,0 +1,90 @@
+<div class="container" *ngIf="isProductResponse">
+  <span><tree-link></tree-link></span>
+  <div class="product-container">
+    <div class="filter-desktop">
+      <app-menu-filter></app-menu-filter>
+    </div>
+
+    <!-- <div class="sidebar">
+            <div class="categories">
+                <h4>Categorias</h4>
+                <loading [loading]="loading && categories.length == 0"></loading>
+                <app-categories-menu-list [categories]="categories" (cat)="catSelected($event)"></app-categories-menu-list>
+            </div>
+            <div class="mt-2 class brands">
+                <h4>Marcas</h4>
+              <loading [loading]="loading && brands.length == 0"></loading>
+                <app-brands-menu-list [brands]="brands" (brand)="brandList($event)"></app-brands-menu-list>
+            </div>
+            <div *ngIf="tecRes && priceRange" class="price-slider">
+                <app-price-slide (selectedPriceRange)="getPriceRange($event)" [setPriceRange]="priceRange"></app-price-slide>
+            </div>
+    
+        </div> -->
+    <div class="card-list-container">
+      <div *ngIf="isProductResponse">
+        <div class="product-head">
+          <div>{{countProducts}} Resultados</div>
+          <div  openModal
+          [appOscurecerPagina]="showFilterMobile" class="filter-icon-mobile">
+            <div
+              (click)="onClickFilterIcon()"
+              clickOutside
+              (onClickOutside)="showFilterMobile = false"
+             
+              class="filter-mobile-container"
+            >
+              <img src="../../../assets/icons/filter.svg" alt="" />
+              <div class="mobile-buttom" [@sidebarTrigger]="showFilterMobile ? 'open' : 'close'">
+                <button class="btn btn-outline-light" (click)="filterMobileAction = 'reset'">
+                    Restablecer
+                </button>
+                <button class="btn btn-success" (click)="[filterMobileAction = 'apply', showFilterMobile = false]">
+                   Aplicar 
+                </button>
+             </div>
+              <div
+                class="filter-mobile"
+                [@sidebarTrigger]="showFilterMobile ? 'open' : 'close'"
+                
+              >
+             
+                <app-menu-filter *ngIf="showFilterMobile" (mobileFilter)="showFilterMobile = false" [isMobile]="true" [filterMobile]="filterMobileAction"></app-menu-filter>
+              </div>
+            </div>
+            <sort-select></sort-select>
+          </div>
+        </div>
+        <loading [loading]="loading "></loading>
+        <div
+          class="card-list"
+          #productHeight
+          ScrollNearEnd
+          (nearEnd)="onNearEndScroll()"
+        >
+          <view-result-card
+            class="cards"
+            *ngFor="let result of tecRes"
+            [data]="result"
+            [baseUrl]=""
+            [isPartesPc]="isPartesPc"
+          ></view-result-card>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div >{{productHeight.offsetHeight}}</div> -->
+</div>
+<div
+  class="container d-flex justify-content-center mt-5"
+  *ngIf="!isProductResponse"
+>
+  <div class="text-center">
+    <img
+      class="image-not-results"
+      src="../../../assets/img/lupa viendote con pesar grande.png"
+      alt=""
+    />
+    <h4 class="mt-4">No encontramos resultados para tu búsqueda</h4>
+  </div>
+</div>
