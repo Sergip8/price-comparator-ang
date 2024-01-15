@@ -46,12 +46,7 @@
             [appOscurecerPagina]="showDesktopMenu && size?.width>=860"
             
           >
-            <div
-              class="desktop-menu-icon"
-              (click)="showDesktopMenu = !showDesktopMenu"
-            >
-              |||
-            </div>
+            <mat-icon class="desktop-menu-icon" (click)="showDesktopMenu = !showDesktopMenu" fontIcon="menu-rounded"></mat-icon>
             <div [@sidebarTrigger]="showDesktopMenu ? 'open':'close'" class="menu">
               <app-menu *ngIf="showDesktopMenu" (closeMenu)="showDesktopMenu = $event"></app-menu>
             </div>

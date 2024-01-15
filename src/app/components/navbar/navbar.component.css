@@ -18,7 +18,10 @@ header{
   }
   .desktop-menu-icon{
     cursor: pointer;
+    margin-top: 7px;
+    color: var(--blue-dark)
   }
+ 
 
   .menu{
     z-index: 999;
@@ -42,6 +45,7 @@ header{
   display: flex;
   gap: 16px;
   align-items: center;
+ 
   
 }
 
@@ -82,7 +86,7 @@ header{
 .header-main {
   padding: 20px 0;
   border-bottom: 1px solid var(--cultured);
-  background-color: var(--blue-2);
+  background: var(--nav-color);
 }
 .desktop-navigation-menu { 
     display: block; 
@@ -98,10 +102,12 @@ header{
 .search-field {
   font-size: var(--fs-7);
   color: var(--onyx);
+  
  width: 100%;
  
  
 } 
+
 
 .search-field::-webkit-search-cancel-button { display: none; }
 
@@ -346,8 +352,9 @@ header{
   }
   @media (min-width: 860px) {
     .container-nav{
-      margin-left: 16px;
-      margin-right: 16px;
+     
+      margin-left: 50px;
+      margin-right: 50px;
     }
    
   

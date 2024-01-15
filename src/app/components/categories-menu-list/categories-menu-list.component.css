@@ -27,7 +27,7 @@ a:hover{
 }
 
 a::before{
-    content: "|_";
+    content: url("../../../assets/icons/corner.svg");
     
     margin-right: 2px;
 }

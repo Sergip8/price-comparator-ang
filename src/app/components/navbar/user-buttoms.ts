@@ -46,7 +46,7 @@ import { UserService } from "src/app/service/user.service";
           <div
             *ngIf="showFavorites && favoriteProducts"
             class="favorites"
-            [style.height.px]="favoriteProducts.length<5? (favoriteProducts.length*80).toString():'500'"
+           
           >
             <product-favorites
               *ngFor="let p of favoriteProducts"
@@ -90,8 +90,8 @@ import { UserService } from "src/app/service/user.service";
   z-index: 12;
   width: 400px;
   position: absolute;
-  padding-left: 8px;
-   padding-right: 8px;
+  padding: 0 8px 8px 8px;
+  max-height: 500px;
   top: 70px;
   margin-left: -366px;
 

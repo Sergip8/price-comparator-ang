@@ -18,6 +18,7 @@ body{
      --blue-2:hsl(223, 24%, 63%);
      --blue-3:hsl(223, 40%, 86%);
      --blue-4:hsl(212, 100%, 97%);
+     --blue-dark:hsl(212, 100%, 29%);
      --black:hsl(0, 0%, 9%);
      --green-discount:hsl(134, 71%, 41%);
      --favorite-selected: hsl(331, 100%, 82%);
@@ -27,6 +28,7 @@ body{
      --filter-background: rgb(243, 248, 252);
      --filter-track-scroll-background: rgb(243, 248, 252);
      --filter-thumb-scroll--background: rgb(125, 165, 198);
+     --nav-color: linear-gradient(0deg, rgba(162,190,201,1) 0%, rgb(100, 175, 255) 100%);
    
      /**
       * typography

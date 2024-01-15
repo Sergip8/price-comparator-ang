@@ -1,4 +1,25 @@
-# ComparadorPrecios
+# Comparador Precios
+
+## Scrennshots
+
+### Desktop
+
+Product results page
+![Comparandor de precios](./screenshots/price-comparator-search.png)
+
+Menu
+![Comparandor de precios](./screenshots/price-comparator-menu.png)
+
+Product details
+![Comparandor de precios](./screenshots/price-comparator-details.png)
+
+## Mobile version
+
+<div style="display: flex;">
+  <img src="./screenshots/price-comparator-results-mobile.png" alt="Imagen 1" style="width: 32%; margin-right: 11px;">
+  <img src="./screenshots/price-comparator-details-mobile.png" alt="Imagen 2" style="width: 32%; margin-right: 11px;">
+  <img src="./screenshots/price-comparator-results--menu-mobile.png" alt="Imagen 3" style="width: 32%; margin-right: 11px;">
+</div>
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.2.5.
 

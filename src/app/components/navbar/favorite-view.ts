@@ -9,8 +9,8 @@ import { UserService } from "src/app/service/user.service"
     <div>
     <img [alt]="product.name" [src]="product?.link_img" fallback="../../../assets/img/notfound.png" width="60px" height="50px" alt="...">
     </div>
-    <div class="mx-2">
-      <div>{{product.name}}</div>
+    <div class="favorite-desc">
+      <div class="favorite-name">{{product.name}}</div>
       <div>{{product.price}}</div>
 
     </div>
@@ -29,29 +29,16 @@ import { UserService } from "src/app/service/user.service"
         background: white;
         border-radius: 0.75rem;
     }
-
-    .product-card{
-      background: white;
-      display: block;
+    .favorite-desc{
+      padding: 0 8px 0 8px
+    }
+    .favorite-name{
+      display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+    }
     
-    width: 12rem ;
-    margin-right: 0.5rem;
-    margin-left: 0.5rem;
-    margin-top: 0.5rem;
-    border-radius: 0.75rem;
-    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-    }
-    .partes-pc-card{
-      background: white;
-      overflow: hidden;
-    height: 10rem ;
-    min-width: 12rem ;
-    margin-right: 0.5rem;
-    margin-left: 0.5rem;
-    margin-top: 0.5rem;
-    border-radius: 0.75rem !important;
-    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
-    }
     `]
   })
   export class ProductFavoritesComponent implements OnInit {
