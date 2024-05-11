@@ -1,6 +1,5 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { CookieService } from "ngx-cookie-service";
 import { BehaviorSubject } from "rxjs";
 import { environment } from "src/environments/environment";
 import { TecDataResponse } from "../models/tec-data-response";
@@ -19,8 +18,8 @@ import { TecDataResponse } from "../models/tec-data-response";
    
     baseUrl = environment.apiUrl
     
-    favorities = new BehaviorSubject<number[]>(this.getFavoriteCookie())
-    constructor(private http: HttpClient, private cookieService: CookieService){}
+  //favorities = new BehaviorSubject<number[]>(this.getFavoriteCookie())
+    constructor(private http: HttpClient){}
     
     updateFavoriteSelected(favorite: string[]){
       this.favoriteSelected.next(favorite)
@@ -44,19 +43,19 @@ import { TecDataResponse } from "../models/tec-data-response";
         return this.http.get<string[]>(this.baseUrl+ "favorite?userId="+ id,{headers: headers})
     }
 
-    setFavoriteCookie(fav: number[]= []){
-      this.cookieService.set('fav', fav.toString(), {path:'/'});
-      //this.getFavoriteCookie()
-    }
-    getFavoriteCookie(): number[]{
-      if(this.cookieService.get('fav')){
-        const fav = this.cookieService.get('fav').split(",").map(num => parseInt(num, 10))
-        console.log(fav)
+    // setFavoriteCookie(fav: number[]= []){
+    //   this.cookieService.set('fav', fav.toString(), {path:'/'});
+    //   //this.getFavoriteCookie()
+    // }
+    // getFavoriteCookie(): number[]{
+    //   if(this.cookieService.get('fav')){
+    //     const fav = this.cookieService.get('fav').split(",").map(num => parseInt(num, 10))
+    //     console.log(fav)
         
-        return fav
-      }
-      return []
-    }
+    //     return fav
+    //   }
+    //   return []
+    // }
     getFavoriteProducts(email: string){
      return this.http.post<TecDataResponse[]>(this.baseUrl + "users/favorite-products", email)
     }
@@ -65,11 +64,11 @@ import { TecDataResponse } from "../models/tec-data-response";
      return this.http.delete(this.baseUrl + "users/remove-favorite/"+id)
     }
 
-    removeFavoriteIdCookie(id: number){
-      let idList = this.getFavoriteCookie()
-      idList = idList.filter(idf => idf !== id)
-      this.setFavoriteCookie(idList)
-    }
+    // removeFavoriteIdCookie(id: number){
+    //   let idList = this.getFavoriteCookie()
+    //   idList = idList.filter(idf => idf !== id)
+    //   this.setFavoriteCookie(idList)
+    // }
 
     setLocalFavorites(favorite: string){
       const fav = sessionStorage.getItem("userFav")

@@ -42,7 +42,6 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 import {  GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 
-import {CookieService} from 'ngx-cookie-service';
 import { ProductFavoritesComponent } from './components/navbar/favorite-view';
 
 import { RegisterComponent } from './components/register/register.component';
@@ -129,7 +128,6 @@ import { Carousel } from './components/home/carousel';
    
     { provide: RouteReuseStrategy,
      useClass: ReuseRouteStrategyService,},
-     CookieService,
      {provide: HTTP_INTERCEPTORS, useClass: AtlasInterceptor, multi: true},
      AuthAltasService
   ],
