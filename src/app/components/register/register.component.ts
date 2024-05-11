@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthService, Credentials } from 'src/app/service/auth.service';
+import { AuthAltasService, SignInUp } from 'src/app/service/auth-atlas.service';
+
 
 interface SignUpForm {
   name: FormControl<string>;
@@ -15,7 +16,8 @@ interface SignUpForm {
 export class RegisterComponent implements OnInit {
   
   @Output() Signin = new EventEmitter()
-  @Output() signinOK = new EventEmitter<boolean>(false)
+  @Output() signinOK = new EventEmitter<SignInUp>()
+
   hidePass = true
   form: FormGroup<SignUpForm> = this.formBuilder.group({
     name: this.formBuilder.control('', {
@@ -32,7 +34,7 @@ export class RegisterComponent implements OnInit {
       nonNullable: true,
     }),
   });
-  constructor(private formBuilder: FormBuilder, private authService: AuthService){
+  constructor(private formBuilder: FormBuilder, private auth: AuthAltasService){
     
   }
   ngOnInit(): void {
@@ -43,8 +45,8 @@ export class RegisterComponent implements OnInit {
   
  async register() {
 try {
- await this.authService.signUpWithEmailAndPassword(<Credentials>this.form.value)
-  this.signinOK.emit()
+ await this.auth.signUpWithEmailAndPassword(this.form.value.email, this.form.value.password)
+  this.signinOK.emit(SignInUp.SIGNUP)
 } catch (error) {
   console.log(error.message)
 }

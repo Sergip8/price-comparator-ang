@@ -38,6 +38,10 @@ a:hover {
     margin-top: 20px;
     border-radius: 15px
 }
+.social-buttons{
+    display: flex;    
+    justify-content: center;
+}
 
 .panel {
     min-height: 380px;

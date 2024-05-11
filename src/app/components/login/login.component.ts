@@ -1,8 +1,9 @@
 import { Component, ElementRef, EventEmitter, NgZone, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthAltasService, SignInUp } from 'src/app/service/auth-atlas.service';
 
-import { AuthService, Credentials } from 'src/app/service/auth.service';
+
 
 interface SignUpForm {
   email: FormControl<string>;
@@ -19,7 +20,7 @@ export class LoginComponent implements OnInit {
   auth2: any;
   hidePass = true
   @Output() signup = new EventEmitter()
-  @Output() loginOK = new EventEmitter<boolean>(false)
+  @Output() loginOK = new EventEmitter<SignInUp>()
 
   form: FormGroup<SignUpForm> = this.formBuilder.group({
 
@@ -33,7 +34,7 @@ export class LoginComponent implements OnInit {
     }),
   });
 
-  constructor(private authService: AuthService, private router: Router, private formBuilder: FormBuilder){}
+  constructor(private auth: AuthAltasService, private router: Router, private formBuilder: FormBuilder){}
 
 
   get emailErrors():string | boolean {
@@ -52,12 +53,11 @@ export class LoginComponent implements OnInit {
  //this.authService.socialGoogleLogin()
   }
   async login(){
-    try {
-     await this.authService.LogInWithEmailAndPassword(<Credentials>this.form.value)
-      this.loginOK.emit()
-    } catch (error) {
-      console.log(error.message)
-    }
+    
+     await this.auth.LogInWithEmailAndPassword(this.form.value?.email, this.form.value?.password).then(
+        (data:any) => this.loginOK.emit(SignInUp.SIGNIN))
+      
+  
   }
 
 

@@ -1,16 +1,22 @@
 .sidebar{
-    
-    background-color: #fff;
-    margin-right: 10px;
-    border-radius: var(--border-radius-sm);   
-    width: 100%;
-  max-width: 500px;
-    
+  
+  background-color: #fff;
+  border-radius: var(--border-radius-sm);   
+  height: fit-content;
+  padding: 16px 0 16px 0;
+  background-color: #fff;
+  
+  
 }
 h4{
-  
-  margin: 8px 0 8px;
-  padding: 8px;
+  margin: 8px;
+}
+.title{
+  font-size: 20px;
+  padding: 12px 0 0 10px;
+}
+.title::first-letter{
+  text-transform: uppercase;
 }
 
 .brands{
@@ -18,11 +24,33 @@ h4{
     max-height: 200px;
     overflow-y: scroll; 
     margin-bottom: 12px;
-    
+    overflow-x: hidden;
+    width: 250px;
+
+}
+.mobile-buttom{
+  width: 300px;
+  background-color: #007bff;
+  position: fixed;
+  display: flex;
+  justify-content: space-around;
+  padding: 16px 32px 16px 32px;
+  margin-bottom: 100px;
+  z-index: 1001;
+  top: 0;
+  right: 0;
   
 }
+.mobile-space{
+  height: 50px;
+}
+.btn-space{
+  margin-top: 50px;
+}
+
 .filters{
   margin-top: 16px;
+ 
 }
 .brand-item{
     display: flex;
@@ -71,6 +99,8 @@ h4{
     height: fit-content;
     padding: 15px;
     overflow-y: scroll;
+    overflow-x: hidden;
+    width: 250px;
 }
 .brand{
     display: flex;

@@ -2,11 +2,12 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ViewResultCardComponent } from './components/view-result-card/view-result-card.component';
-import { ViewResultListComponent } from './components/view-result-list/view-result-list.component';
+
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { SearchBarResultComponent } from './components/search-bar/search-bar_results.component';
@@ -36,30 +37,38 @@ import { ProductDetailComponent } from './components/product-detail/product-deta
 import { LoginComponent } from './components/login/login.component';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
 import { ModalDirective } from './directives/modal.directive';
-import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
 
-import {GoogleLoginProvider,FacebookLoginProvider} from '@abacritt/angularx-social-login';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+
 import {  GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
-import { environment, firebaseConfig } from 'src/environments/environment';
+
 import {CookieService} from 'ngx-cookie-service';
 import { ProductFavoritesComponent } from './components/navbar/favorite-view';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getAuth, provideAuth } from '@angular/fire/auth';
+
 import { RegisterComponent } from './components/register/register.component';
 import { SocialButtoms } from './components/navbar/social-buttons';
 import { MenuMobileComponent } from './components/menu-mobile/menu-mobile.component';
-import { SortSelect } from './components/view-result-list copy/sort-select';
+import { SortSelect } from './components/view-result-list/sort-select';
 import { FilterView } from './components/menu-filter/filter-view';
-import { ViewResultListUComponent } from './components/view-result-list copy/view-result-listU.component';
-import { TreeLinks } from './components/view-result-list copy/tree-link';
+import { ViewResultListUComponent } from './components/view-result-list/view-result-listU.component';
+import { TreeLinks } from './components/view-result-list/tree-link';
 import { UserButtoms } from './components/navbar/user-buttoms';
 import { SuggestedResults } from './components/search-bar/suggested-results';
+import { AtlasInterceptor } from './interceptors/atlas.interceptor';
+import { AuthAltasService } from './service/auth-atlas.service';
+import { FavoritesComponent } from './favorites/favorites.component';
+import { ConfirmEmail } from './components/login/confirm-email.component';
+import { environment } from 'src/environments/environment';
+import { StickyDirective } from './directives/sticky.directive';
+import { Carousel } from './components/home/carousel';
+
+
 
 @NgModule({
   declarations: [
     AppComponent,
     ViewResultCardComponent,
-    ViewResultListComponent,
+   
     SearchBarComponent,
     MenuFilterComponent,
     SearchBarResultComponent,
@@ -85,6 +94,8 @@ import { SuggestedResults } from './components/search-bar/suggested-results';
     TreeLinks,
     UserButtoms,
     SuggestedResults,
+    ConfirmEmail,
+    Carousel,
 
     ViewResultListUComponent,
     
@@ -93,7 +104,9 @@ import { SuggestedResults } from './components/search-bar/suggested-results';
     InfiniteScrollDirective,
     ModalDirective,
     RegisterComponent,
-    MenuMobileComponent
+    MenuMobileComponent,
+    FavoritesComponent,
+    StickyDirective
   ],
   imports: [
     BrowserModule,
@@ -107,37 +120,18 @@ import { SuggestedResults } from './components/search-bar/suggested-results';
     CarouselModule,
     DragScrollModule,
     NgApexchartsModule,
-    SocialLoginModule ,
     GoogleSigninButtonModule,
-    provideFirebaseApp(() => initializeApp(firebaseConfig)),
-    provideAuth(() => getAuth())
+    MatSnackBarModule,
+  
  
   ],
   providers: [
-    {
-      provide: 'SocialAuthServiceConfig',
-      useValue: {
-        autoLogin: false,
-        providers: [
-          {
-            id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(environment.clientId)
-          },
-          {
-            id: FacebookLoginProvider.PROVIDER_ID,
-            provider: new FacebookLoginProvider('clientId')
-          }
-        ],
-        onError: (err) => {
-          console.error(err);
-        }
-      } as SocialAuthServiceConfig,
    
-  
-    },
     { provide: RouteReuseStrategy,
      useClass: ReuseRouteStrategyService,},
-     CookieService
+     CookieService,
+     {provide: HTTP_INTERCEPTORS, useClass: AtlasInterceptor, multi: true},
+     AuthAltasService
   ],
   bootstrap: [AppComponent]
 })

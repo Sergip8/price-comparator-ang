@@ -1,5 +1,12 @@
 export interface ProductHistory{
-    specification: string
     price:string
     scrap_date: string
+}
+export interface HistoryChart{
+    name: string
+    data: HistoryData[]
+}
+export interface HistoryData{
+    y: string
+    x: string
 }

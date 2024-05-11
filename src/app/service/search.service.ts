@@ -11,6 +11,7 @@ import { SuggestedProducts, TecDataResponse, TecDataResponseUnified } from "../m
 import { TvFilters } from "../models/tv-filters";
 import { ProductPayload } from "../models/product-payload";
 import { MenuService, StoreType } from "./menu-service";
+import { ProductResponse } from "../models/product-atlas";
 
 const baseUrl = "http://localhost:8080/api/";
 @Injectable({
@@ -89,7 +90,7 @@ export class SearchService {
     );
   }
   getTecResult(payload: ProductPayload) {
-    return this.http.post<SearchTecPayload>(
+    return this.http.post<ProductResponse>(
       baseUrl + `results/tecnologia`, payload);
   }
   getTecResultUnified(payload: ProductPayload) {

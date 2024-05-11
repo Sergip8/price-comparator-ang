@@ -1,19 +1,21 @@
-import { Component } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Router } from "@angular/router";
 import { TecDataResponse } from "src/app/models/tec-data-response";
-import { AuthService } from "src/app/service/auth.service";
+import { AuthAltasService, SignInUp } from "src/app/service/auth-atlas.service";
+
 import { UserService } from "src/app/service/user.service";
 
 @Component({
     selector: 'user-buttoms',
     template: `
   <div class="header-user-actions">
-        <div
+        <div 
           clickOutside
           (onClickOutside)="showLogin = false"
           openModal
           [appOscurecerPagina]="showLogin"
         >
-          <button class="action-btn" (click)="showLogin = !showLogin">
+          <button *ngIf="!user" class="action-btn" (click)="showLogin = !showLogin">
           <!-- <span [ngClass]="showLogin? 'login-selected': ''"]>Ingresar</span> -->
             <mat-icon fontIcon="person"></mat-icon>
           </button>
@@ -21,16 +23,19 @@ import { UserService } from "src/app/service/user.service";
           <div *ngIf="showLogin" class="auth">
             <app-login
               *ngIf="flag"
-              (loginOK)="showLogin=$event"
+              (loginOK)="onClickRegister($event)"
               (signup)="flag = false"
             ></app-login>
             <app-register
               *ngIf="!flag"
-              (signinOK)="flag= $event"
+              (signinOK)="onClickRegister($event)"
               (Signin)="flag = true"
             ></app-register>
           </div>
         </div>
+        <div *ngIf="user">
+          <button (click)="logOut()" class="btn btn-outline btn-light">Salir</button>
+      </div>
 
         <button class="action-btn">
           <mat-icon fontIcon="notifications"></mat-icon>
@@ -38,7 +43,7 @@ import { UserService } from "src/app/service/user.service";
           <span class="count">0</span>
         </button>
         <div clickOutside (onClickOutside)="showFavorites = false">
-          <button class="action-btn" (click)="getFavorites()">
+          <button class="action-btn" (click)="routeToFavorites()">
             <mat-icon fontIcon="favorite"></mat-icon>
 
             <span class="count">0</span>
@@ -51,7 +56,7 @@ import { UserService } from "src/app/service/user.service";
             <product-favorites
               *ngFor="let p of favoriteProducts"
               [product]="p"
-              (removeProduct)="removeFavorites($event)"
+              
             ></product-favorites>
           </div>
         </div>
@@ -149,6 +154,7 @@ import { UserService } from "src/app/service/user.service";
           align-items: center;
   gap: 15px;
   margin-top: 8px;
+  
 }
 
 .header-user-actions .action-btn {
@@ -157,6 +163,7 @@ import { UserService } from "src/app/service/user.service";
   color: var(--onyx);
   padding: 5px;
   background-color: transparent;
+  color: var(--social-btn);
 }
 
 .header-user-actions .count {
@@ -177,50 +184,98 @@ import { UserService } from "src/app/service/user.service";
 
     `]
   })
-  export class UserButtoms{
+  export class UserButtoms implements OnInit{
+logOut() {
+ this.auth.logout()
+ this.router.navigate(['/'])
+}
 
+    productsIds: string[] = []
     favoriteProducts: TecDataResponse[] 
     showFavorites = false
     showLogin = false
     flag = true
+
+    @Input() emailConfirm: boolean
+    @Output() onClickAuth = new EventEmitter<SignInUp>()
+    $user = this.auth.user
+    user: Realm.User
     
+routeToFavorites() {
+  
+  if(this.$user){
+    this.$user.subscribe(u => this.user =  u) 
+    if(this.user){
+      if(this.auth.tokenExpired(this.user.accessToken))
+        this.auth.refreshUser()
+
+      this.userService.getUserFavorites(this.user.id, this.user.accessToken).subscribe({
+          next: favorites => {
+            console.log(favorites)
+            this.userService.syncLocalFav(favorites)
+          this.router.navigate(['/favoritos'], {
+            state: {
+              productIds: favorites,
+            },
+          });
+           
+          }
+        })
+    }
+    else{
+      console.log("no hay user")
+      this.showLogin = true  
+    }
+}
+}
     constructor(
-        private userSevice: UserService, 
-       
-        public auth: AuthService,
+        private userService: UserService, 
+        private router: Router,
+        public auth: AuthAltasService,
     ){}
-    getFavorites(){
-        this.auth.authState$.subscribe( user => {
-          if(user){
+  ngOnInit(): void {
+    console.log(this.user)
+    if(this.emailConfirm){
+      this.showLogin = true
+      
+    }
+  }
+  onClickRegister(signInUp: SignInUp){
+    this.showLogin = false
+    this.onClickAuth.emit(signInUp)
+  }
+    // getFavorites(){
+    //     this.auth.authState$.subscribe( user => {
+    //       if(user){
             
-            this.showFavorites = !this.showFavorites
-            this.getUserFavoriteProducts()
-          }
+    //         this.showFavorites = !this.showFavorites
+    //         this.getUserFavoriteProducts()
+    //       }
     
-        })
-      }
+    //     })
+    //   }
     
-      removeFavorites(id: number) {
-        console.log(id)
-        this.userSevice.removeFavorite(id).subscribe({
-          next: () => {
-            this.removeFavorites(id)
-            this.userSevice.removeFavoriteIdCookie(id)
-            this.getUserFavoriteProducts()
-          }
-        })
-        }
+      // removeFavorites(id: number) {
+      //   console.log(id)
+      //   this.userSevice.removeFavorite(id).subscribe({
+      //     next: () => {
+      //       this.removeFavorites(id)
+      //       this.userSevice.removeFavoriteIdCookie(id)
+      //       this.getUserFavoriteProducts()
+      //     }
+      //   })
+      //   }
     
-        getUserFavoriteProducts(){
+      //   getUserFavoriteProducts(){
             
-          this.auth.authState$.subscribe(user => {
-            this.userSevice.getFavoriteProducts(user.uid).subscribe({
-              next: products => {
-                this.favoriteProducts = products
+      //     this.auth.authState$.subscribe(user => {
+      //       this.userSevice.getFavoriteProducts(user.uid).subscribe({
+      //         next: products => {
+      //           this.favoriteProducts = products
                 
-              }
-            })
+      //         }
+      //       })
     
-          })
-        }
+      //     })
+      //   }
   }

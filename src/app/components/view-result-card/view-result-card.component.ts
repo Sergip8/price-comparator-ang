@@ -2,6 +2,7 @@ import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Outpu
 import { BasicData } from '../../models/basic-data';
 import { fromEvent } from 'rxjs';
 import { Router } from '@angular/router';
+import { UserService } from 'src/app/service/user.service';
 
 @Component({
   selector: 'view-result-card',
@@ -10,24 +11,45 @@ import { Router } from '@angular/router';
 })
 export class ViewResultCardComponent implements OnInit {
 
+
   @Input() data!: any
   @Input() baseUrl: string = ""
   @Input() store: string = ""
   @Input() styles: any
   @Input() isPartesPc: boolean
+  @Input() isFavoriteView: boolean
   productName = ""
 
   @Output() scroll_value = new EventEmitter<number>()
- 
 
+  @Output() favoriteSelectedEmit = new EventEmitter<string[]>()
+ 
+  favoriteSelected: string[] = []
   style = {'width': '80px;',
   'height': '150px;'}
   currentRoute: string;
-  constructor(private router: Router) { 
+  constructor(private router: Router, private userService: UserService) { 
     this.currentRoute = new URL(window.location.href).pathname
   }
   ngOnInit(): void {
    
+  }
+  selectFavorite(favorite: string) {
+   let favorites = []
+   this.userService.favoriteSelected$.subscribe(f => {
+    favorites = f
+   })
+   
+   const index = favorites.indexOf(favorite)
+   if(index === -1){
+     console.log(index)
+     favorites.push(favorite)
+    }else{
+      favorites.splice(index, 1)
+    }
+   
+    
+   this.favoriteSelectedEmit.emit(favorites)
   }
 
   changeName(name: string):string{
@@ -52,7 +74,7 @@ export class ViewResultCardComponent implements OnInit {
 
   routeToDetails(data: any){
     console.log(data)
-    this.router.navigate([`/product-details/`+data.id],{
+    this.router.navigate([`/product-details/`+data._id],{
       state:{
         data: data,
         isPartesPc: this.isPartesPc

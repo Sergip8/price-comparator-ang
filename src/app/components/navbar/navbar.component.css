@@ -28,19 +28,25 @@ header{
     position: absolute;
     left: 0;
     top: 94px;
-    
+   
   }
   .mobile-categories-menu{
     z-index: 999;
     position: absolute;
     left: 0;
     top: 109px;
+    margin-bottom: 200px;
     background-color: #fff;
     width: 300px;
-    padding: 16px;
-    overflow: hidden;
-    height: 100vh;
+    padding: 16px 16px 100px 16px;
+    overflow: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
+  .mobile-categories-menu::-webkit-scrollbar {
+    display: none;
+  }
+  
 .container-nav{
   display: flex;
   gap: 16px;
@@ -86,7 +92,7 @@ header{
 .header-main {
   padding: 20px 0;
   border-bottom: 1px solid var(--cultured);
-  background: var(--nav-color);
+  background: var(--nav-bar);
 }
 .desktop-navigation-menu { 
     display: block; 
@@ -281,6 +287,7 @@ header{
       -webkit-align-items: center;
           -ms-flex-align: center;
               align-items: center;
+              
     }
     .mobile-categories-menu{
       top: 54px;

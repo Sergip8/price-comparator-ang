@@ -1,8 +1,8 @@
-<div class="container">
+<app-navbar></app-navbar>
+
+    <header-carousel [carouselImg]="carouselImg" (goTo)="navigateTo($event)"></header-carousel>
     <div class="home-tecnologia">
         <div class="">
-            <h3>Tecnologia</h3>
-
         </div>
         <product-carousel [products]="productsDiscount" [title]="'Ofertas'"></product-carousel>
 
@@ -12,10 +12,10 @@
     
     <!-- <product-carousel></product-carousel> -->
     
-</div>
+
 <div class="home-partes-pc mt-4">
    
-    <product-carousel [partesPcHome]="partesPc" [title]="'Partes de pc'"></product-carousel>
+    <product-carousel [products]="partesPc" [title]="'Partes de pc'"></product-carousel>
     
 </div>
 

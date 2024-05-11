@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HistoryChart } from 'src/app/models/product-history';
 import { TecDataResponse, TecDataResponseUnified } from 'src/app/models/tec-data-response';
-import { AuthService } from 'src/app/service/auth.service';
+import { AuthAltasService } from 'src/app/service/auth-atlas.service';
+import { ProductAtlasService } from 'src/app/service/product-atlas.service';
 import { ProductDetailService } from 'src/app/service/product-detail.service';
 import { SearchService } from 'src/app/service/search.service';
 import { UserService } from 'src/app/service/user.service';
@@ -16,7 +18,7 @@ export class ProductDetailComponent implements OnInit {
 
 
   productId: string
-  productData = []
+  productData: HistoryChart[]
   productName = ""
   productDescription: any
   productList: TecDataResponse[]
@@ -25,15 +27,15 @@ export class ProductDetailComponent implements OnInit {
   typePath = ""
   currentRoute: string;
   productFavoriteIcon = true
-  favorities: number[]
+  favorities: string[]
   isFavoriteSelected: boolean
   isPartesPc: boolean
   
   constructor(private activatedRoute: ActivatedRoute, 
     private productdetail: ProductDetailService, 
-    private searchService: SearchService,
+    private productService: ProductAtlasService,
     private userService: UserService,
-    private authService: AuthService,
+    private auth: AuthAltasService,
     private router: Router){
     this.currentRoute = new URL(window.location.href).pathname
     this.activatedRoute.params.subscribe((params) => {
@@ -45,8 +47,8 @@ export class ProductDetailComponent implements OnInit {
     this.productName = params["name"]
     })
     this.product = router.getCurrentNavigation().extras?.state?.["data"]
-    this.isPartesPc = router.getCurrentNavigation().extras?.state?.["isPartesPc"]
-
+    this.isPartesPc = this.product.category.startsWith("partes-pc")
+    console.log(this.product)
     if(this.isPartesPc){
       this.getPartesPcRelated()
     }else{
@@ -54,7 +56,9 @@ export class ProductDetailComponent implements OnInit {
       if(!this.product){
         productdetail.getProductById(this.productId).subscribe({
           next: product =>{ this.product = product
+           
        
+      
           this.getRelatedProducts()
         }
   
@@ -67,71 +71,74 @@ export class ProductDetailComponent implements OnInit {
 
     if (this.productName)
     this.productName = this.product.name.split(' ').slice(0,2).join(' ')
-   
-   
-
   }
-  ngOnInit(): void {
-    this.getproductHistory()
-    
-    this.authService.authState$.subscribe(user =>{
+  async ngOnInit() {
+    console.log(this.isPartesPc)
+    this.auth.refreshUser
+    this.auth.getCurrentUser()
    
+      this.getproductHistory()
+      
       this.getStores()
-      if(user){
-      // this.userService.getUserFavorites(this.authService.getEmail()).subscribe({
+      
+      if(this.auth.getCurrentUser().isLoggedIn){
+        this.getUserFavorites()
+        // this.userService.getUserFavorites(this.authService.getEmail()).subscribe({
       //   next: favorities => {
       //     this.favorities = favorities
       //     this.isFavorite(this.product.id)
       //   }
       // })
-      this.favorities = this.userService.getFavoriteCookie()
-    
-      this.isFavorite(this.product.id)
-      this.getUserFavorites()
+      
+      
+      
       }
-    })
+    
   }
 
   getproductHistory(){
   
-   
-    this.productdetail.getProductHistory(this.productId).subscribe({
-      next: data => {
-      
-        if(data){
-          let prices = data["price"].split(",").map(Number) 
-          let dates = data["scrap_date"].split(",")
-          
-      
-  
-          for (let i = 0; i<dates.length; i++){
-            const obj = {};
-            obj["y"] = prices[i];
-            obj["x"] = dates[i]
-            this.productData.push(obj)
+    // this.productdetail.getProductHistory(this.productId, this.product.category).subscribe({
+    //   next: data => {
+    //     if(data){
+    //       let prices = data["price"].split(",").map(Number) 
+    //       let dates = data["scrap_date"].split(",")
 
-        }
-        }   
-      },error: e =>{
-          console.log(e)
-      }
-      
-    })
+    //       for (let i = 0; i<dates.length; i++){
+    //         const obj = {};
+    //         obj["y"] = prices[i];
+    //         obj["x"] = dates[i]
+    //         this.productData.push(obj)
+    //     }
+    //     console.log(this.productData)
+    //     }
+    //   },error: e =>{
+    //       console.log(e)
+    //   }
+    // })
+
    
+      this.productdetail.getProductsHistory(this.product.ids, this.product.category).subscribe({
+        next: data => {
+          console.log(data)
+         this.productData = data
+        },error: e =>{
+            console.log(e)
+        }
+      })
   }
 
   getRelatedProducts(){
    
-      this.searchService.getRelatedProducts(this.product.category).subscribe({
+      this.productService.getRelatedProducts(this.product.category).subscribe({
         next: data =>{
           console.log(data)
           this.productList = data}
       })
-    
 
   }
   getPartesPcRelated(){
-    this.searchService.getRelatedPartesPc(this.product.category).subscribe({
+    this.productService.getRelatedPartesPc(this.product.category).subscribe({
       next: data => this.productList = data
     })
   }
@@ -140,63 +147,49 @@ export class ProductDetailComponent implements OnInit {
   
     return typeof(this.productDescription) === 'object'
   }
-  favoriteSelected(id: number) {
-
-
-    this.authService.authState$.subscribe( user =>{
-      
-         this.userService.setUserFavorite(user.uid, id).subscribe({
-        next: favorities => {
-          this.favorities = favorities
-          this.isFavorite(id)
+  favoriteSelected(id: string) {
+    const user:Realm.User = this.auth.getCurrentUser()
+    console.log(user)
+      if(user){
+         if(this.auth.tokenExpired(user.accessToken)){
+          this.auth.refreshUser()
         }
+         this.userService.setUserFavorite(user.id, [id], user.accessToken).subscribe({
+        next: favorities => {
+         this.userService.setLocalFavorites(id)
+          this.isFavorite(id)
+        },error: e => console.log(e)
       })
-    })
-
     }
-    
-    // if(this.authService.loggedIn()){
-
-    //   const fav = this.userService.getFavoriteCookie()
-    //   const index = fav.indexOf(id)
-    //   if(index !== -1){
-    //     fav.splice(index, 1)
-    //   }
-    //   else{
-    //     fav.push(id)
-    //   }
-    //   this.userService.setFavoriteCookie(fav)
-    //   this.favorities = this.userService.getFavoriteCookie()
-      
-    //   this.isFavorite(this.product.id)
-    //   // console.log("3#eeeeentro favoritos")
-    //   // this.userService.setUserFavorite(this.authService.getEmail(), id).subscribe({
-    //   //   next: favorities => {
-    //   //     this.favorities = favorities
-    //   //     this.isFavorite(id)
-    //   //   }
-    //   // })
-      
-     
-    // }
-    
+    }
 
     getUserFavorites(){
-      this.authService.authState$.subscribe( user =>{
-      this.userService.getUserFavorites(user.uid).subscribe({
-        next: favorites => {
-          this.favorities = favorites
-          this.isFavorite(this.product.id)
+      
+      const user:Realm.User = this.auth.getCurrentUser()
+      if(user){
+        if(this.auth.tokenExpired(user.accessToken)){
+          this.auth.refreshUser()
         }
-      })
-      })
+
+        this.userService.getUserFavorites(user.id, user.accessToken).subscribe({
+          next: favorites => {
+            console.log(favorites)
+            this.userService.syncLocalFav(favorites)
+            this.isFavorite(this.product._id)
+          }
+        })
+      }else{
+      }
     }
-    isFavorite(productId: number) {
-      this.isFavoriteSelected = this.favorities ? this.favorities.includes(productId): false
+    isFavorite(productId: string) {
+      console.log(productId)
+      this.isFavoriteSelected = this.userService.getLocalFavorites().includes(productId)
    
     }
     getStores(){
-      this.searchService.getStores(this.product.ids).subscribe({
+      
+      if(this.product.ids)
+      this.productService.getStores(this.product.ids).subscribe({
         next: stores =>{ this.stores = stores}
       })
     }

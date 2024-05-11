@@ -11,11 +11,14 @@
           openModal
           [appOscurecerPagina]="showCategories"
         >
-          <mat-icon (click)="getMenuCategories()" fontIcon="menu"></mat-icon>
+          <mat-icon (click)=" showCategories = !showCategories" fontIcon="menu"></mat-icon>
 
           <div
             *ngIf="showCategories"
             class="mobile-categories-menu"
+            
+            [style.height.px]="windowHeight"
+           
             [@sidebarTrigger]="showCategories ? 'open' : 'close'"
           >
             <div class="mt-3">
@@ -29,7 +32,7 @@
         </div>
       </ng-container>
 
-      <a href="#" class="header-logo">
+      <a routerLink="/" class="header-logo">
         <img
           src="../../../assets/img/comparame esta.png"
           alt="comparame esta"
@@ -48,7 +51,7 @@
           >
             <mat-icon class="desktop-menu-icon" (click)="showDesktopMenu = !showDesktopMenu" fontIcon="menu-rounded"></mat-icon>
             <div [@sidebarTrigger]="showDesktopMenu ? 'open':'close'" class="menu">
-              <app-menu *ngIf="showDesktopMenu" (closeMenu)="showDesktopMenu = $event"></app-menu>
+              <app-menu *ngIf="showDesktopMenu" [menuCategories]="menuCategories" (closeMenu)="showDesktopMenu = $event"></app-menu>
             </div>
           </div>
         </div>
@@ -59,7 +62,7 @@
         </div>
       
 
-      <user-buttoms></user-buttoms>
+      <user-buttoms (onClickAuth)="onRegister($event)" [emailConfirm]="showLogin"></user-buttoms>
     </div>
   </div>
 
@@ -79,12 +82,12 @@
           <div *ngIf="showLoginMobile" class="auth">
             <app-login
               *ngIf="flag"
-              (loginOK)="showLoginMobile=$event"
+              (loginOK)="showLoginMobile=false"
               (signup)="flag = false"
             ></app-login>
             <app-register
               *ngIf="!flag"
-              (signinOK)="flag= $event"
+              (signinOK)="flag= false"
               (Signin)="flag = true"
             ></app-register>
           </div>

@@ -24,16 +24,25 @@ a{
     font-size: 12px;
     margin: 0;
 }
+
 .product-item{
-    background-color: white;
-    border-radius: var(--border-radius-md);
-    height: 310px;
-    
-  
-}
-.card-img-top{
-    border-top-right-radius: var(--border-radius-md);
+    /* background-color: white; */
+    /* border-radius: var(--border-radius-md); */
+    flex-grow: 1;
+    margin-right: -1px;
     border-top-left-radius: var(--border-radius-md);
+    border-top-right-radius: var(--border-radius-md);
+    /* border: 1px solid rgba(0,0,0,.3); */
+    /* margin: -1px 0 0 -1px; */
+}
+
+.card-img-top{
+   /* padding: 1px; */
+   height: 155px;
+   width: 193px;
+   padding: 1px;
+   border-top-left-radius: var(--border-radius-md);
+   border-top-right-radius: var(--border-radius-md);
 }
 
 .store-brand{
@@ -64,4 +73,55 @@ a{
 .store-img{
     margin-right: 5px;
 }
+.favorite-input{
+    position: absolute;
+    margin-top: 8px;
+    margin-left: 8px;
+    z-index: 200;
+}
+input[type="checkbox"] {
+   position: absolute;
+   right: 10px;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: var(--form-background);
+    padding: 8px;
+    
+    font: inherit;
+    color: var(--eerie-black);
+    width: 1.15em;
+    height: 1.15em;
+    border: 0.15em solid var(--eerie-black);
+    border-radius: 0.15em;
+    transform: translateY(-0.075em);
+  }
+  
+  input[type="checkbox"]::before {
+    content: "";
+    width: 0.65em;
+    height: 0.65em;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+    transform: scale(0);
+    transform-origin: bottom left;
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em #007bff;
+    /* Windows High Contrast Mode */
+    background-color: CanvasText;
+  }
+  
+  input[type="checkbox"]:checked::before {
+    transform: scale(1);
+  }
+  
+  input[type="checkbox"]:focus {
+    outline: max(2px, 0.15em) solid currentColor;
+    outline-offset: max(2px, 0.15em);
+  }
+  
+  input[type="checkbox"]:disabled {
+    --form-control-color: var(--form-control-disabled);
+  
+    color: var(--form-control-disabled);
+    cursor: not-allowed;
+  }
 

@@ -1,6 +1,9 @@
 
 .menu-mobile-container{
     margin-left: 8px;
+    overflow-y: scroll;
+    -ms-overflow-style: none; 
+    scrollbar-width: none;  
 }
 a{
     text-decoration: none;

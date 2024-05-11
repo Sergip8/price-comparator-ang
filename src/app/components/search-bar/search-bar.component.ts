@@ -71,7 +71,7 @@ import { SuggestedProducts } from "src/app/models/tec-data-response";
       display:flex;
       width: 100%;
       
-      justify-content: space-between;
+      justify-content: center;
     }
     .search-input{
       position:relative;
@@ -152,7 +152,7 @@ export class SearchBarComponent implements OnInit {
         console.log(val)
         this.getCategories = [];
         if (val.length >= 2) {
-          this.getSuggestedProducts(val)
+         // this.getSuggestedProducts(val)
           this.categories.products.forEach((c) => {
             if (c.startsWith(val)) {
               if (this.getCategories.length < 6) {
@@ -172,12 +172,12 @@ export class SearchBarComponent implements OnInit {
     this.showSuggested = false
     this.router.navigate(['/search'], {queryParams: {q: search}})
   }
-  getSuggestedProducts(search: string){
-    this.showSuggested = true
-    this.searchService.getSuggestedProducts(search).subscribe({
-      next: data => {
-        this.suggestedProducts = data}
-    })
-  }
+  // getSuggestedProducts(search: string){
+  //   this.showSuggested = true
+  //   this.searchService.getSuggestedProducts(search).subscribe({
+  //     next: data => {
+  //       this.suggestedProducts = data}
+  //   })
+  // }
    
 }

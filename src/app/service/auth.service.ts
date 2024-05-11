@@ -1,59 +1,55 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Injectable, inject } from "@angular/core";
-import { BehaviorSubject, Observable, from } from "rxjs";
-import { environment } from "src/environments/environment";
+// import { HttpClient, HttpHeaders } from "@angular/common/http";
+// import { Injectable, inject } from "@angular/core";
 
-import { GoogleLoginProvider, SocialAuthService } from "@abacritt/angularx-social-login";
-import { User } from "../models/user";
-import { Auth, AuthProvider, FacebookAuthProvider, GoogleAuthProvider, UserCredential, authState, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from "@angular/fire/auth";
+// import { Auth, AuthProvider, FacebookAuthProvider, GoogleAuthProvider, UserCredential, authState, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from "@angular/fire/auth";
 
-export interface Credentials{
-  email: string
-  password: string
-}
+// export interface Credentials{
+//   email: string
+//   password: string
+// }
 
-const apiUrl = "http://localhost:8080";
-const header = new HttpHeaders().set('Content-type', 'application/json');
-@Injectable({
-    providedIn: "root",
-  })
-  export class AuthService{
-    private auth: Auth = inject(Auth)
+// const apiUrl = "http://localhost:8080";
+// const header = new HttpHeaders().set('Content-type', 'application/json');
+// @Injectable({
+//     providedIn: "root",
+//   })
+//   export class AuthService{
+//     private auth: Auth = inject(Auth)
 
-    readonly authState$ = authState(this.auth)
+//     readonly authState$ = authState(this.auth)
 
-    signUpWithEmailAndPassword(credentials: Credentials): Promise<UserCredential>{
-      return createUserWithEmailAndPassword(this.auth, credentials.email, credentials.password)
-    }
+//     signUpWithEmailAndPassword(credentials: Credentials): Promise<UserCredential>{
+//       return createUserWithEmailAndPassword(this.auth, credentials.email, credentials.password)
+//     }
 
-    LogInWithEmailAndPassword(credential: Credentials){
-      return signInWithEmailAndPassword(this.auth, credential.email, credential.password)
-    }
+//     LogInWithEmailAndPassword(credential: Credentials){
+//       return signInWithEmailAndPassword(this.auth, credential.email, credential.password)
+//     }
 
-    LogOut(): Promise<void>{
-      return this.auth.signOut()
-    }
-    signInWithGoogleProvider(): Promise<UserCredential> {
-      const provider = new GoogleAuthProvider();
+//     LogOut(): Promise<void>{
+//       return this.auth.signOut()
+//     }
+//     signInWithGoogleProvider(): Promise<UserCredential> {
+//       const provider = new GoogleAuthProvider();
   
-      return this.callPopUp(provider);
-    }
-    async callPopUp(provider: AuthProvider): Promise<UserCredential> {
-      try {
-        const result = await signInWithPopup(this.auth, provider);
+//       return this.callPopUp(provider);
+//     }
+//     async callPopUp(provider: AuthProvider): Promise<UserCredential> {
+//       try {
+//         const result = await signInWithPopup(this.auth, provider);
   
-        return result;
-      } catch (error: any) {
-        return error;
-      }
-    }
+//         return result;
+//       } catch (error: any) {
+//         return error;
+//       }
+//     }
 
-    signInWithFacebookProvider(){
-      const provider = new FacebookAuthProvider()
+//     signInWithFacebookProvider(){
+//       const provider = new FacebookAuthProvider()
 
-      return this.callPopUp(provider)
+//       return this.callPopUp(provider)
 
-    }
+//     }
 
 //     private baseUrl = environment.apiUrl
 //     private loginStatus = new BehaviorSubject<boolean>(false)
@@ -147,9 +143,9 @@ const header = new HttpHeaders().set('Content-type', 'application/json');
   
   
 
-      loggedIn(): boolean {
-         return !!localStorage.getItem("user") 
-    }
+    //   loggedIn(): boolean {
+    //      return !!localStorage.getItem("user") 
+    // }
     
     // verifyToken(token: string){
       
@@ -170,9 +166,9 @@ const header = new HttpHeaders().set('Content-type', 'application/json');
     //   username: JSON.parse(localStorage.getItem("user"))?.name
     //    }
     // }
-    getEmail():string{
-      return JSON.parse(localStorage.getItem("user"))?.email
-    }
+  //   getEmail():string{
+  //     return JSON.parse(localStorage.getItem("user"))?.email
+  //   }
     
-  }
+  // }
 

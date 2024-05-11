@@ -1,10 +1,6 @@
-import { AfterViewChecked, AfterViewInit, Component, ElementRef, EventEmitter, HostListener, OnInit, Output, ViewChild } from "@angular/core";
-import { SearchService } from "../../service/search.service";
-import { SearchPayload } from "../../models/search-payload";
-import { SearchTec } from "../../models/search-tec";
-import { FilterData, SearchTecPayload } from "../../models/search-tec-payload";
-import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
-import { TecDataResponse, TecDataResponseUnified } from "src/app/models/tec-data-response";
+import {Component, ElementRef, EventEmitter, HostListener, Input, OnInit } from "@angular/core";
+
+import { ActivatedRoute, Router } from "@angular/router";
 import { BrandFilterService } from "src/app/service/brand-filter.service";
 import { MenuService, StoreType } from "src/app/service/menu-service";
 import { SortService } from "src/app/service/sort-products.service";
@@ -13,9 +9,20 @@ import { ProductPayload } from "src/app/models/product-payload";
 import { SortOptions } from "./sort-select";
 import { UIService } from "src/app/service/ui.service";
 import { animate, state, style, transition, trigger } from "@angular/animations";
+import { AuthAltasService } from "src/app/service/auth-atlas.service";
+import { ProductAtlasService } from "src/app/service/product-atlas.service";
+import { Filters, Product, ProductResponse } from "src/app/models/product-atlas";
+import { UserService } from "src/app/service/user.service";
 
+
+export enum FilterSelectedState{
+  CATEGORY,
+  BRAND,
+  FILTERS,
+
+}
 @Component({
-  selector: "app-view-result-list",
+  selector: "products-view",
   templateUrl: "./view-result-listU.component.html",
   styleUrls: ["./view-result-listU.component.css"],
   animations: [
@@ -25,7 +32,7 @@ import { animate, state, style, transition, trigger } from "@angular/animations"
 
       // To define animations based on trigger actions
       state('open', style({ transform: 'translateX(0%)' })),
-      state('close', style({ transform: 'translateX(100%)', display: 'none' })),
+      state('close', style({ transform: 'translateX(100%)'})),
       transition('open => close', [
         animate('300ms ease-in')
       ]),
@@ -36,45 +43,61 @@ import { animate, state, style, transition, trigger } from "@angular/animations"
   ]
 })
 export class ViewResultListUComponent implements OnInit{
-filterMobileAction: string;
-onClickFilterIcon() {
-  this.filterMobileAction= ''
-  this.productPayload.operator = "or"
-  this.showFilterMobile = true
- 
+
+  
+
+confirmDelete() {
+  this.showDeleteFavoriteMessage = true
 }
 
+filterMobileAction: string;
+onClickFilterIcon() {
+  
+  this.productPayload.operator = "or"
+  this.showFilterMobile = true
+}
 
-
+//@Input() favoriteIds: string[]
+filterState: FilterSelectedState
+sidebarTitle: string = ""
+  showDeleteFavoriteMessage: boolean = false
   updatePriceRange = true
   search_value = "";
   category_value = "";
   countProducts = 0
-  tecRes: TecDataResponseUnified[];
+  tecRes: Product[];
   brands = []
   priceRange: number[];
   priceRangeTemp = [0, 100000000];
   flag: boolean = true;
-  loading = true;
+  loading = false;
   categoryParam: string
   currentRoute: string;
-  isProductResponse: boolean = true
+  isProductResponse: boolean = false
   tvFilterSelected: TvFilters
   productPayload:ProductPayload = new ProductPayload
   showFilterMobile: boolean = false;
   typeStore: StoreType
   isPartesPc: boolean
   updateFilters: boolean = true
+  isFavoriteView: boolean = false
+  favoritesSelected: string[] = []
+
+  favoriteIds = this.router.getCurrentNavigation().extras.state?.['productIds'];
 
   constructor(
-    private service: SearchService,
+    private service: ProductAtlasService,
     private activatedRoute: ActivatedRoute,
     public brandFilter: BrandFilterService,
     private menuService: MenuService,
     private router: Router,
+    private userService: UserService,
     private sortService: SortService,
+    private auth: AuthAltasService,
     public uiService: UIService
   ) {
+    console.log(this.favoriteIds)
+
     menuService.storeTypeState$.subscribe(st => this.productPayload.typeStore = st)
    
     this.tecRes = [];
@@ -99,9 +122,11 @@ onClickFilterIcon() {
     const page = url.searchParams.get("page")
 
     this.flag = true
-
-
+     
     if (this.search_value) {
+      this.sidebarTitle = this.search_value
+      this.productPayload.search = this.search_value
+      console.log(this.search_value)
       brandFilter.updateSort("Relevancia")
       this.priceRange = this.priceRangeTemp
       this.productPayload.search = this.search_value
@@ -109,58 +134,48 @@ onClickFilterIcon() {
       menuService.resetLinkTree()
       menuService.addLinkTree({type: "search", value: this.search_value})
       this.getUrlCat()
-      this.getUrlBrands(queryBrands)
       this.getUrlFilters(filters)
       this.getUrlSort(sort)
       this.getUrlPriceRange(queryPriceRange)
-      this.getSearchResult();
-
+      this.getUrlBrands(queryBrands)
   }
-  
     else{
       brandFilter.updateSort("Relevancia")
-      
       menuService.resetLinkTree()
       this.search_value = ""
       this.activatedRoute.params.subscribe((params) => {
-       
         let cat = []
         for (let i = 0 ; i <= 2 ; i++){
-          
           if(params[`category${i}`]){
-            
             cat.push(params[`category${i}`])
-          
             menuService.addLinkTree({type: "category", value: params[`category${i}`]})
           }
         }
-        
+        this.sidebarTitle = cat[cat.length - 1]
         //brandFilter.categories.next(filterCat)
         if(cat[0] == "partes-pc"){
           this.productPayload.typeStore = StoreType.PARTES_PC
           this.isPartesPc = this.productPayload.typeStore == StoreType.PARTES_PC
         }
         const joinCat = cat.join("/")
-       
         menuService.categoryLink.next(joinCat)
         this.productPayload.category = joinCat
         this.getUrlBrands(queryBrands)
         this.getUrlFilters(filters)
         this.getUrlSort(sort)
         this.getUrlPriceRange(queryPriceRange)
-        this.getSearchResult()
-   
-        
-  
-       
       });
+      if(this.currentRoute == "/favoritos" && this.productPayload.category == "" && this.search_value == ""){
+        this.isFavoriteView = true
+        this.flag = true
+        this.productPayload.favoriteIds = userService.getLocalFavorites()
+      }
     }
-   
-   
+    if(this.productPayload.search || this.productPayload.category || this.productPayload.favoriteIds.length>0)
+
+    this.getSearchResult();
   }
-
   ngOnInit(): void {
-
     this.showFilterMobile = false
    
   }
@@ -189,6 +204,7 @@ onClickFilterIcon() {
       if (sortOptions.includes(sort)){
         this.brandFilter.updateSort(sort)
         this.productPayload.sort = this.sortConverter(sort)
+        
       }
     }else
     this.productPayload.sort = this.sortConverter("Relevancia")
@@ -202,7 +218,7 @@ onClickFilterIcon() {
       this.productPayload.brands = queryBrands.split(",");
       this.brandFilter.brandsSelected.next(this.productPayload.brands);
       this.menuService.addLinkTree({type: "brand", value: queryBrands.toLowerCase()})
-      
+      this.filterState = FilterSelectedState.BRAND
       }
       else{
       queryBrands = ""
@@ -231,7 +247,7 @@ onClickFilterIcon() {
             })
         })
       
-        this.productPayload.filter = filterList
+        this.productPayload.filterList = filterList
         if(filterList.length == 0){
           this.brandFilter.updateIsFilterEmpty(true)
           
@@ -267,63 +283,71 @@ onClickFilterIcon() {
       this.productPayload.page = 1
   }
 
-
   getSearchResult() {
     this.loading = true
-    
-      this.service
-        .getTecResultUnified(
-       this.productPayload,
-        
-        )
-        .subscribe({
-          next: (data) => {
-            console.log(data)
-            this.tecRes.push(...data[0].response);
-            this.countProducts = data[0].payload[0].count
-            this.isProductResponse = this.tecRes.length != 0
+    console.log(this.productPayload.sort)
+    console.log(this.favoriteIds)
+    console.log(this.productPayload)
+    if(this.favoriteIds){
+      this.productPayload.favoriteIds = this.favoriteIds
+       this.search()
+      }else{
+      this.search()
+     }
+  }
+
+  search(){
+  
+    this.service.getTecResultUnified(
+      this.productPayload,
+       )
+       .subscribe({
+         next: (data) => {
+           console.log(data)
+           this.setProduct(data)
+           this.loading = false;
+           console.log(this.loading)
+           console.log(this.isProductResponse)
+         },
+         error: (e) => {
+ 
+           this.loading = false;
+         },
+       });
+  }
+
+  setProduct(data: ProductResponse){
+    this.tecRes.push(...data.paginatedResults);
+          if(data.totalCount){
+            
+            this.countProducts = data.totalCount[0].count
+          }
+           this.isProductResponse = this.tecRes.length > 0
            
-  
-            if (this.brands.length == 0 && this.flag) {       
-              this.brandFilter.updateFilterBrands(data[0].payload[0].brands);
-              this.brandFilter.updateBrands(data[0].payload[0].brands)
-  
-            }
-            if(this.updatePriceRange){
-              const priceRange = [data[0].payload[0].minPrice, data[0].payload[0].maxPrice]
-              this.brandFilter.updatePriceRange(priceRange);
-              this.brandFilter.updatePriceRangeState(priceRange)
-              this.brandFilter.updateSessionPriceRangeState(priceRange);
-            }
-            if(this.flag){
+           if(data.parameters.length>0){
+             if (this.brands.length == 0 && this.filterState != FilterSelectedState.BRAND) {       
+               this.brandFilter.updateFilterBrands(data.parameters[0].brands);
+               this.brandFilter.updateBrands(data.parameters[0].brands)
               
+               
+              }
+              if(this.updatePriceRange && this.isProductResponse ){
+                const priceRange= [data.parameters[0].minPrice, data.parameters[0].maxPrice]
+                  this.brandFilter.updatePriceRangeState(priceRange)
+              this.brandFilter.updatePriceRange(priceRange);
+              this.brandFilter.updateSessionPriceRangeState(priceRange);
+              }
             
-            }
-            this.brandFilter.updateFilterList(this.orderFilter(data[0].filterGroup))
-            //if(this.search_value){
-              this.brandFilter.categories.next(this.menuService.listaAObjeto(data[0].payload[0].categories))
+           if(this.flag){
              
-           // }
-            
-            // this.brandFilter.categories.next(
-            //   data.categories.map((c) => {
-            //     let cf = c.split("/");
-            //     return cf[cf.length - 1];
-            //   })
-            // );
-            
-            // if (this.searchMethod == 'category' && data.categories[0].startsWith("/"+ this.search_value))
-            //   this.split_cat = -1
-  
-            this.loading = false;
            
-          },
-          error: (e) => {
-  
-            this.loading = false;
-          },
-        });
-  
+           }
+          
+
+             this.brandFilter.updateFilterList(this.orderFilter(data.filters))  
+             this.brandFilter.categories.next(this.menuService.listaAObjeto(data.parameters[0].categories))
+           }
+          
   }
 
 
@@ -337,24 +361,9 @@ onNearEndScroll(){
   }
   //this.page += 1;
 }
-// onPriceRange(){
-//   console.log("########emitio#########")
-//   this.flag = false;
-//   this.updatePriceRange = false
-//   this.tecRes = [];
-//  //console.log(this.priceRange)
-//   this.getSearchResult()
 
-// }
-// sortProducts(sortSelected: string) {
-//   this.productPayload.page = 0
-//   this.tecRes = []
-//   console.log(sortSelected)
-//   this.productPayload.sort = sortSelected
-//   this.getSearchResult()
-// }
 
-orderFilter(filters: FilterData[]){
+orderFilter(filters: Filters[]){
   filters.sort()
  
 
@@ -362,9 +371,10 @@ orderFilter(filters: FilterData[]){
   let filter = {}
   let listFilter = []
   filters.forEach(f =>{
-    let split_filter = f.filterName[0].split("_")
+    let split_filter = f._id.split("_")
     list.push([split_filter[0], [split_filter[1], f.count]])
   })
+  console.log(list)
   list.sort()
   list.forEach(f =>{
     
@@ -380,17 +390,37 @@ orderFilter(filters: FilterData[]){
 sortConverter(sort: string){
   switch(sort){
     case "Mayor precio":
-      return {sort: 1, field: "price"}
+      return {price: -1,}
     case "Menor precio":
-      return {sort: 0, field: "price"}
+      return {price: 1}
     case "A-Z":
-      return {sort: 0, field: "name"}
+      return {name: 1}
     case "Z-A":
-      return {sort: 1, field: "name"}
+      return {name: -1}
     case "Relevancia":
-      return {sort: 1, field: "_id"}
+      return {_id: 1}
     default:
-      return {sort: 0, field: "_id"}
+      return {_id: -1}
   }
 }
+
+favoriteSelected(favotiresSelected: string[]) {
+ this.favoritesSelected = favotiresSelected
+  }
+  deleteFavorites() {
+    const user = this.auth.getCurrentUser()
+    if(user) {
+
+      this.userService.setUserFavorite(user.id, this.favoritesSelected, user.accessToken).subscribe({
+        next: () =>{
+            this.showDeleteFavoriteMessage = false
+            this.favoritesSelected.forEach(f => this.userService.setLocalFavorites(f))
+            this.tecRes = this.tecRes.filter(tr => !this.favoritesSelected.includes (tr._id))
+        }
+      })
+    }
+
+}
+
+
 }

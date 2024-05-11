@@ -12,7 +12,7 @@ export class TecDataResponse{
 }
 
 export class TecDataResponseUnified{
-    id: number
+    _id: string
     name: string
     link_img: string
     brand: string

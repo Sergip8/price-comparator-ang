@@ -25,14 +25,8 @@
   }
     
     .photo {
-      
       padding: 30px;
-      width: 45%;
-    
       float: left;
-      
-     
-      
     }
     img { 
         max-height: 200px; 

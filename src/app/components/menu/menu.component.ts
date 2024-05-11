@@ -1,5 +1,7 @@
-import { Component, EventEmitter, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { Router } from "@angular/router";
+import { audit } from "rxjs";
+import { AuthAltasService } from "src/app/service/auth-atlas.service";
 import { MenuService, StoreType } from "src/app/service/menu-service";
 
 
@@ -15,11 +17,11 @@ mainCategorySelected: string
 @Output() closeMenu = new EventEmitter<boolean>()
 selected = ""
 menu!: any
-menuCategories: object
+@Input() menuCategories: object
 subMenu: object
 mainCategories: string[]
 @Output() categories = new EventEmitter<string>()
-constructor(public menuService: MenuService, private router: Router){
+constructor(private auth: AuthAltasService, public menuService: MenuService, private router: Router){
     this.mainCategories = menuService.mainCat
 }
 navigateTo(...cat: string[]) {
@@ -31,8 +33,8 @@ navigateTo(...cat: string[]) {
     this.router.navigateByUrl('/categoria/'+(cat.join("/").toLowerCase()))
 }
 
-    ngOnInit(): void {
-       this.getMenuCategories()
+    async ngOnInit() {
+       //this.getMenuCategories()
     }
     showSubmenu(value: string){
         this.mainCategorySelected = value
@@ -43,25 +45,30 @@ navigateTo(...cat: string[]) {
        
         
     }
-   getMenuCategories(){
-        let menu = this.menuService.getLocalMenuCategories()
-        if (menu){
-            this.menuCategories = menu
-        }
-        else{
-            this.menuService.getMenuCategories().subscribe({
-                next: cat => {     
-                           
-                const menuCategory = this.menuService.listaAObjeto(cat[0].categories)
-                this.menuService.setMenuCategories(menuCategory)
-                this.menuCategories = menuCategory
-        
-                },
-                error: e => console.log(e)
-            })
+//  getMenuCategories(){
+//         let menu = this.menuService.getLocalMenuCategories()
+//         if (menu){
+//             this.menuCategories = menu
+//         }
+//         else{
+              
+//                 this.menuService.getMenuCategories().subscribe({
+//                     next: data => {
+
+                              
+//                         const menuCategory =  this.menuService.listaAObjeto(data)
+//                         this.menuService.setMenuCategories(menuCategory)
+//                         this.menuCategories = menuCategory
+                
+//                     }
+//                 })
+                
+                
+          
             
 
-        }
-    }
+//         }
+//     }
+  
 
   }

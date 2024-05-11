@@ -1,5 +1,17 @@
-<div class="sidebar">
-    <h4>Categorias</h4>
+
+    <div>
+        <div *ngIf="isMobile" class="mobile-buttom">
+            <button (click)="resetBtn()" class="btn btn-outline-light">
+                Restablecer
+            </button>
+            <button (click)="applyBtn()" class="btn btn-success">
+               Aplicar 
+            </button>
+            <div class="btn-space"></div>
+        </div>
+
+    </div>
+    <h4 class="title">{{filterTitle}}</h4>
     <div class="categories">
         <loading [loading]="loading && !!categories"></loading>
         
@@ -45,8 +57,10 @@
     <div>
         <app-price-slide (selectedPriceRange)="getPriceRange($event)"></app-price-slide>
     </div>
-
+    <div class="mobile-space">
+        
+        </div>
+   
     
-    
-    </div>
+     
  

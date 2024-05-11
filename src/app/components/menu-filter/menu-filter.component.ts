@@ -13,6 +13,13 @@ import { MenuService } from 'src/app/service/menu-service';
 
 
 export class MenuFilterComponent implements OnInit {
+applyBtn() {
+  this.router.navigate([], {queryParams: {operator: "or", filters: JSON.stringify(this.filtersSelected), relativeTo:this.route, brands: this.brandFilter.brandsSelected.value.toString()}, queryParamsHandling: 'merge'})
+}
+resetBtn() {
+  this.removeFilters()
+  this.brandFilter.updateBrandsSelected([])
+}
 removeFiltersUpdate() {
  this.removeFilters()
  this.queryParams["filters"] = ""
@@ -35,6 +42,8 @@ removeFilters() {
 
   filtersSelected:object
   filterIsEmpty: boolean
+
+  @Input() filterTitle: string
   @Input() filterMobile: string
   @Input() isMobile: boolean
   mobileAction: string
@@ -177,8 +186,12 @@ removeFilters() {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-    
-      this.mobileAction = changes["filterMobile"].currentValue
+      console.log(changes)
+
+      if(changes["filterMobile"]){
+        
+        this.mobileAction = changes["filterMobile"].currentValue
+        console.log(this.mobileAction)
 
       if(this.mobileAction === 'reset'){
         this.removeFilters()
@@ -193,6 +206,7 @@ removeFilters() {
       
       
       }
+    }
     }
   
 }

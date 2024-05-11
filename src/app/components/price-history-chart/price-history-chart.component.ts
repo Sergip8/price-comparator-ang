@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from "@angular/core";
+import { Component, Input, OnInit, SimpleChanges, ViewChild } from "@angular/core";
 
 import {
     ChartComponent,
@@ -9,6 +9,7 @@ import {
     ApexDataLabels,
     ApexMarkers
   } from "ng-apexcharts";
+import { HistoryChart } from "src/app/models/product-history";
   
   export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -44,48 +45,57 @@ import {
   
   export class PriceHistoryChartComponent implements OnInit {
       
-    @Input() data: any[]
+    @Input() data: HistoryChart[]
     @ViewChild("chart") chart: ChartComponent;
     public chartOptions: Partial<ChartOptions>;
     constructor(){
     }
 
     ngOnInit(): void {
-        console.log(this.data)
-        this.chartOptions = {
-            series: [
-              {
-                name: "precio",
-                data: this.data
-              }
-            ],
         
-            chart: {
-              type: "line",
-              height: 350,
-              toolbar: {
-                show: true,
-                tools:{
-                  download:false
-                }
-              }
-            },
-            stroke: {
-              curve: "smooth"
-            },
-            dataLabels: {
-              enabled: false
-            },
-            title: {
-              text: "Historial precio",
-              align: "left"
-            },
-            markers: {
-              hover: {
-                sizeOffset: 4
+        if(this.data){
+        
+
+        }
+    }
+
+    ngOnChanges(changes: SimpleChanges){
+      if(changes["data"].currentValue){
+        console.log(changes["data"].currentValue)
+        this.chartOptions = {
+          series: [
+           ...changes["data"].currentValue
+            
+          ],
+      
+          chart: {
+            type: "line",
+            height: 350,
+            toolbar: {
+              show: true,
+              tools:{
+                download:false
               }
             }
-          };
+          },
+          stroke: {
+            curve: "smooth"
+          },
+          dataLabels: {
+            enabled: false
+          },
+          title: {
+            text: "Historial precio",
+            align: "left"
+          },
+          markers: {
+            hover: {
+              sizeOffset: 4
+            }
+          }
+        };
+      }
+
     }
     
 }

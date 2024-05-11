@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { CookieService } from "ngx-cookie-service";
 import { BehaviorSubject } from "rxjs";
@@ -13,19 +13,35 @@ import { TecDataResponse } from "../models/tec-data-response";
   })
   export class UserService{
    
+
+    private favoriteSelected = new BehaviorSubject<string[]>([]) 
+    favoriteSelected$ = this.favoriteSelected.asObservable()
+   
     baseUrl = environment.apiUrl
     
     favorities = new BehaviorSubject<number[]>(this.getFavoriteCookie())
     constructor(private http: HttpClient, private cookieService: CookieService){}
     
+    updateFavoriteSelected(favorite: string[]){
+      this.favoriteSelected.next(favorite)
+    }
+
     syncFavorities(email: string, fav: number[]) {
       return this.http.post<number[]>(this.baseUrl+ "users/sync-favorites",{email: email, fav:fav})
     }
-    setUserFavorite(userId: string, productId: number){
-        return this.http.post<number[]>(this.baseUrl + "users/set-favorite", {userId: userId, productId:productId})
+    setUserFavorite(userId: string, productId: string[], token: string){
+
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` });
+        console.log(productId)
+        return this.http.post(this.baseUrl + "favorite", {userId: userId, favorite:productId},{headers: headers})
     }
-    getUserFavorites(email: string){
-        return this.http.post<number[]>(this.baseUrl+ "users/get-favorites", email)
+    getUserFavorites(id: string, token: string){
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` });
+        return this.http.get<string[]>(this.baseUrl+ "favorite?userId="+ id,{headers: headers})
     }
 
     setFavoriteCookie(fav: number[]= []){
@@ -54,4 +70,34 @@ import { TecDataResponse } from "../models/tec-data-response";
       idList = idList.filter(idf => idf !== id)
       this.setFavoriteCookie(idList)
     }
+
+    setLocalFavorites(favorite: string){
+      const fav = sessionStorage.getItem("userFav")
+      if(fav){
+
+        const favList = JSON.parse(fav)
+        const index = favList.indexOf(favorite)
+        if(index == -1){
+          favList.push(favorite)
+        }else{
+          favList.splice(index, 1)
+        }
+        sessionStorage.setItem("userFav", JSON.stringify(favList))
+      }else{
+        sessionStorage.setItem("userFav", JSON.stringify([favorite]))
+        
+      }
+    }
+    getLocalFavorites(){
+      const fav = sessionStorage.getItem("userFav")
+      if(fav){
+
+        return JSON.parse(fav)
+      }
+      return []
+    }
+    syncLocalFav(favorites: string[]){
+      sessionStorage.setItem("userFav", JSON.stringify(favorites))
+    }
+
   }

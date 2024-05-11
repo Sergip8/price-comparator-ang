@@ -1,9 +1,10 @@
+<app-navbar></app-navbar>
 <div class="container">
 
     <div class="product-details">
         <div class="product-card">
             <div class="photo">
-                <mat-icon [style.color]="isFavoriteSelected ? 'pink': ''" (click)="favoriteSelected(product.id)" class="favorite-icon" fontIcon="favorite"></mat-icon>
+                <mat-icon [style.color]="isFavoriteSelected ? 'pink': ''" (click)="favoriteSelected(product._id)" class="favorite-icon" fontIcon="favorite"></mat-icon>
                 <img [src]="product.link_img">
                 
         

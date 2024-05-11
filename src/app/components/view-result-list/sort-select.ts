@@ -1,8 +1,10 @@
-import { Component, EventEmitter, Output } from "@angular/core";
+import { Component, EventEmitter, OnInit, Output } from "@angular/core";
+import { Router } from "@angular/router";
+import { BrandFilterService } from "src/app/service/brand-filter.service";
 
 export enum SortOptions{
+  "DESCUENTO" = "Descuento", 
     "RELEVANCIA" = "Relevancia",
-    "DESCUENTO" = "Descuento", 
     "MAYOR_PRECIO" = "Mayor precio",
     "MENOR_PRECIO" = "Menor precio",
     "A_Z" = "A-Z",
@@ -12,28 +14,33 @@ export enum SortOptions{
 @Component({
     selector: 'sort-select',
     template: `
-  <!-- <div class="sort-select">
-    <select [(ngModel)]="sortSelected" (change)="sort.emit(sortSelected)">
-        <option *ngFor="let s of sortOptions" [value]="s">{{s}}</option>
+  <div class="sort-select">
+    <select [(ngModel)]="sortSelected" (change)="setUrlSort(sortSelected)">
+        <option *ngFor="let s of sortOptions " [value]="s">{{s}}</option>
     </select>
 
-  </div> -->
+  </div>
     `,
     styles: [`
-    .google, .facebook{
-        width: 100%;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 0.3rem;
-        background: white;
-        border: 1px solid #eee;
-        border-radius: 0.75rem;
-    }
+ 
     .sort-select > select{
       padding: 8px;
+   
       
+    }
+    select{
+      border:none;
+      background-color: transparent;
+    }
+    option{
+      gap: 8px;
+      padding-top:5px;
+    }
+    select:active{
+      border:none;
+    }
+    select::selection{
+      padding:8px;
     }
     svg{
         width: 2rem ;
@@ -45,10 +52,28 @@ export enum SortOptions{
     `]
   })
 
-  export class SortSelectOld{
+  export class SortSelect implements OnInit{
 
-    @Output() sort = new EventEmitter<string>(null)
+    
     sortOptions: string[] = Object.values(SortOptions) 
-    sortSelected = "Relevancia"
+    sortSelected: string = "Relevancia"
+
+    
+    path = new URL(window.location.href).pathname
+    constructor(private router: Router, private filtersService: BrandFilterService){
+      this.filtersService.sort$.subscribe(s => this.sortSelected = s)
+
+    }
+  ngOnInit(): void {
+    
+    console.log("######sort$$###### " + this.sortSelected)
+  }
+
+    setUrlSort(sort: string){
+      console.log("######sort###### " + sort)
+      
+      
+        this.router.navigate([this.path], {queryParams: {sort: sort}, queryParamsHandling: 'merge'})
+    }
 
   }

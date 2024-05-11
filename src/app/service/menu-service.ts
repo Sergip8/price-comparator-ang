@@ -2,8 +2,9 @@ import { HttpClient } from "@angular/common/http"
 import { Injectable } from "@angular/core"
 import { BehaviorSubject, filter } from "rxjs"
 import { SearchTecPayload } from "../models/search-tec-payload"
+import * as Realm from "realm-web";
 
-const baseUrl = 'http://localhost:8080/api/'
+const baseUrl = "https://us-east-1.aws.data.mongodb-api.com/app/application-0-pidid/endpoint/";
 
 export interface LinkTree{
   type: string
@@ -19,6 +20,7 @@ export enum StoreType{
   })
   export class MenuService {
 
+    user: any
     mainCat = [
       "tecnologia",
       "electrodomesticos",
@@ -70,10 +72,12 @@ export enum StoreType{
     }
 
     constructor(private http: HttpClient){}
+    
   
-
-    getMenuCategories(){
-       return this.http.get<any[]>(baseUrl+"categories")
+  
+  
+  getMenuCategories(){
+    return this.http.get<string[]>(baseUrl + "categories")
         
     }
     // getPartesPcCategories(){
