@@ -81,7 +81,7 @@ export class ProductDetailComponent implements OnInit {
       
       this.getStores()
       
-      if(this.auth.getCurrentUser().isLoggedIn){
+      if(this.auth.getCurrentUser()?.isLoggedIn){
         this.getUserFavorites()
         // this.userService.getUserFavorites(this.authService.getEmail()).subscribe({
       //   next: favorities => {
@@ -97,31 +97,19 @@ export class ProductDetailComponent implements OnInit {
   }
 
   getproductHistory(){
-  
-    // this.productdetail.getProductHistory(this.productId, this.product.category).subscribe({
-    //   next: data => {
-    //     if(data){
-    //       let prices = data["price"].split(",").map(Number) 
-    //       let dates = data["scrap_date"].split(",")
-
-    //       for (let i = 0; i<dates.length; i++){
-    //         const obj = {};
-    //         obj["y"] = prices[i];
-    //         obj["x"] = dates[i]
-    //         this.productData.push(obj)
-    //     }
-    //     console.log(this.productData)
-    //     }
-    //   },error: e =>{
-    //       console.log(e)
-    //   }
-    // })
-
-   
       this.productdetail.getProductsHistory(this.product.ids, this.product.category).subscribe({
         next: data => {
-          console.log(data)
-         this.productData = data
+          if(data){
+            console.log(data)
+            this.productData = data
+            if(this.productData.length>1){
+             this.productData.forEach((pd, i) => {
+               let list = this.productData[(this.productData.length-1)-i].data.map(objeto => objeto.x);
+               this.productData[i].data = pd.data.filter(objeto => list.includes(objeto.x));
+             })
+            }
+            
+          }          
         },error: e =>{
             console.log(e)
         }
@@ -190,7 +178,14 @@ export class ProductDetailComponent implements OnInit {
       
       if(this.product.ids)
       this.productService.getStores(this.product.ids).subscribe({
-        next: stores =>{ this.stores = stores}
+        next: stores =>{ 
+          this.stores = stores
+          this.stores.sort((a, b) => {
+            if (a.price < b.price) return -1;
+            if (a.price > b.price) return 1;
+            return 0;
+        });
+        }
       })
     }
 

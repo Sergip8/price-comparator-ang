@@ -37,13 +37,9 @@ a{
 }
 
 .card-img-top{
-   /* padding: 1px; */
-   height: 155px;
-   width: 193px;
-   padding: 1px;
-   border-top-left-radius: var(--border-radius-md);
-   border-top-right-radius: var(--border-radius-md);
+    width: 100%;
 }
+   
 
 .store-brand{
    
