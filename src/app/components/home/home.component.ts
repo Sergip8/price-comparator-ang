@@ -22,7 +22,7 @@ export class HomeComponent implements OnInit {
   partesPc: TecDataResponse[]
   newFavorities: number[]
   carouselImg: CarouselImg[]
-
+  isLoading: boolean = true;
 
   constructor(
     private searchService: ProductAtlasService,

@@ -1,21 +1,37 @@
-<app-navbar></app-navbar>
+<div class="home-container">
 
-    <header-carousel [carouselImg]="carouselImg" (goTo)="navigateTo($event)"></header-carousel>
-    <div class="home-tecnologia">
-        <div class="">
+    <app-loading-main 
+    [isLoading]="productsDiscount.length == 0 && carouselImg.length == 0" 
+    [fullScreen]="true"
+    [message]="''"
+    [showLogo]="true">
+    </app-loading-main>
+
+    <div class="home-container" *ngIf="productsDiscount.length >0">
+        <app-navbar></app-navbar>
+        
+            <header-carousel [carouselImg]="carouselImg" (goTo)="navigateTo($event)"></header-carousel>
+            <div class="home-tecnologia">
+                <div class="">
+                </div>
+                <product-carousel [products]="productsDiscount" [title]="'Ofertas'"></product-carousel>
+        
+            </div>
+            
+            
+            
+            <!-- <product-carousel></product-carousel> -->
+            
+        
+        <div class="home-partes-pc mt-4">
+           
+            <product-carousel [products]="partesPc" [title]="'Partes de pc'"></product-carousel>
+            
         </div>
-        <product-carousel [products]="productsDiscount" [title]="'Ofertas'"></product-carousel>
-
+        
+        <app-footer></app-footer>
     </div>
-    
-    
-    
-    <!-- <product-carousel></product-carousel> -->
-    
-
-<div class="home-partes-pc mt-4">
-   
-    <product-carousel [products]="partesPc" [title]="'Partes de pc'"></product-carousel>
-    
 </div>
+
+
 

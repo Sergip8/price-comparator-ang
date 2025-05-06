@@ -23,7 +23,7 @@ import { SearchService } from 'src/app/service/search.service';
   `,
   styles: [`
   .product-card-container{
-    height: fit-content;
+    
   }
   .product-card-mobile{
   
@@ -45,7 +45,7 @@ import { SearchService } from 'src/app/service/search.service';
 
   .product-card{
     background: white;
-    height: 20rem ;
+   
     width: 12rem ;
     margin-right: 0.5rem;
     margin-left: 0.5rem;

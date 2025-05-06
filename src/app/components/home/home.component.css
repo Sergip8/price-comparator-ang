@@ -1,5 +1,16 @@
+
+.home-container{
+    height: 100vh;
+}
+
 .home-partes-pc{
     padding: 20px  0 40px 0;
     background-color: var(--blue-3);
     
+}
+.home-container{
+    position: relative;
+}
+app-footer{
+  
 }

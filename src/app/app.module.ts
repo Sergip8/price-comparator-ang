@@ -60,6 +60,9 @@ import { ConfirmEmail } from './components/login/confirm-email.component';
 import { environment } from 'src/environments/environment';
 import { StickyDirective } from './directives/sticky.directive';
 import { Carousel } from './components/home/carousel';
+import { FooterComponent } from './components/footer/footer.component';
+import { LoadingMainComponent } from './components/loading-main/loading-main.component';
+import { FilterPipe } from './pipes/filter.pipe';
 
 
 
@@ -95,9 +98,9 @@ import { Carousel } from './components/home/carousel';
     SuggestedResults,
     ConfirmEmail,
     Carousel,
-
+    LoadingMainComponent,
     ViewResultListUComponent,
-    
+  
     ClickOutsideDirective,
     FallbackImgDirective,
     InfiniteScrollDirective,
@@ -105,7 +108,9 @@ import { Carousel } from './components/home/carousel';
     RegisterComponent,
     MenuMobileComponent,
     FavoritesComponent,
-    StickyDirective
+    StickyDirective,
+    FooterComponent,
+    FilterPipe,
   ],
   imports: [
     BrowserModule,

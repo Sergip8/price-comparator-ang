@@ -1,0 +1,28 @@
+
+<div 
+  *ngIf="isLoading"
+  class="loading-container"
+  [class.full-screen]="fullScreen"
+  [@fadeInOut]
+>
+  <div class="loading-content">
+    <div *ngIf="showLogo" class="logo-container" [@pulse]="pulseState">
+      <img src="assets/img/comparame esta.png" alt="Company Logo" class="logo" />
+    </div>
+    
+    <div class="spinner-container">
+      <div class="spinner">
+        <div class="double-bounce1"></div>
+        <div class="double-bounce2"></div>
+      </div>
+    </div>
+    
+    <div class="loading-message">{{ message }}</div>
+    
+    <div class="loading-progress">
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+    </div>
+  </div>
+</div>

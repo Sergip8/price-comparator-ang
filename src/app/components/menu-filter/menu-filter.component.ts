@@ -39,6 +39,7 @@ export class MenuFilterComponent implements OnInit {
   categories: object
   filters: object
   filterNameList: string[]
+  brandFind = ""
 
   filtersSelected: object
   filterIsEmpty: boolean

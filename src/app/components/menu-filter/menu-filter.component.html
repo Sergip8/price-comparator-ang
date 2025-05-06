@@ -1,56 +1,64 @@
+<div class="filter-container">
+  <!-- Mobile Actions -->
+  <div *ngIf="isMobile" class="mobile-actions">
+    <button type="button" (click)="resetBtn()" class="btn btn-outline-secondary">
+      <i class="fas fa-undo-alt" aria-hidden="true"></i> Restablecer
+    </button>
+    <button type="button" (click)="applyBtn()" class="btn btn-primary">
+      <i class="fas fa-check" aria-hidden="true"></i> Aplicar
+    </button>
+  </div>
 
-    <div class="filter-container">
+  <div [style.margin-bottom.px]="isMobile ? 80 : 0"></div>
 
-        <div>
-            <div *ngIf="isMobile" class="mobile-buttom">
-                <button (click)="resetBtn()" class="btn btn-outline-light">
-                    Restablecer
-                </button>
-                <button (click)="applyBtn()" class="btn btn-success">
-                   Aplicar 
-                </button>
-                <div class="btn-space"></div>
-            </div>
-    
-        </div>
-        <div [style.margin-bottom.px]="isMobile ? '80' : '0'"></div>
-        <h4 class="title">{{filterTitle}}</h4>
-        <div class="categories">
-            <loading [loading]="loading && !!categories"></loading>
-            
-                <app-categories-menu-list [category]="categories" (cat)="catSelected($event)"></app-categories-menu-list>
-    
-           
-        </div>
-      
-        <h4>Marcas</h4>
-        <div class="mt-2 class brands">
-          <loading [loading]="loading && brands.length == 0"></loading>
-          <div *ngFor="let b of brands ; index as i" class="brand-item" (click)="brandSelected(b, i)">
-            <div>
-                <input class="brand-checkbox" #brandInput [checked]="brandFilter.brandsSelected.value.includes(b)" type="checkbox">
-            </div>
-            <div class="brand" type="button">
-                &nbsp;{{b}}</div> 
-    
-              <!-- <app-brands-menu-list [brand]="b.key" (brandRes)="brandList($event)" class="d-flex"></app-brands-menu-list> -->
-          </div>
-        </div>
-        <div class="filters">
-        <div *ngFor="let f of filters | keyvalue" >
-            
-            <product-filter [filterNameSelected]="filterNameList" [filterItems]="f.value" [filterList]="filtersSelected[f.key]" [filterName]="f.key" (filterSelected)="itemFilterSelected($event)"></product-filter>
-        </div>
-    
-        </div >
-        <div>
-            <app-price-slide (selectedPriceRange)="getPriceRange($event)"></app-price-slide>
-        </div>
-        <div class="mobile-space">
-            
+  <!-- Categories Section -->
+  <section class="filter-section">
+    <h4 class="filter-title">{{filterTitle}}</h4>
+    <div class="categories">
+      <loading [loading]="loading && !!categories"></loading>
+      <app-categories-menu-list [category]="categories" (cat)="catSelected($event)"></app-categories-menu-list>
     </div>
+  </section>
+
+  <!-- Brands Section -->
+  <section class="filter-section">
+    <h4 class="filter-title">Marcas</h4>
+    <div class="brands-container">
+      <loading [loading]="loading && brands.length === 0"></loading>
+      <div class="search-brands" *ngIf="brands.length > 5">
+        <label for="brandSearch" class="sr-only">Buscar marca</label>
+        <input #search id="brandSearch" type="text" [(ngModel)]="brandFind" placeholder="Buscar marca..." class="form-control brand-search">
+      </div>
+      <div class="brands-list">
+        <div *ngFor="let b of brands | filter: brandFind; index as i" class="brand-item">
+          <label class="brand-label">
+            <input class="brand-checkbox" #brandInput [checked]="brandFilter.brandsSelected.value.includes(b)" type="checkbox" (click)="brandSelected(b, i)">
+            <span class="brand-name">{{b}}</span>
+          </label>
         </div>
-   
-    
-     
- 
+      </div>
+    </div>
+  </section>
+
+  <!-- Dynamic Filters Section -->
+  <ng-container *ngFor="let f of filters | keyvalue">
+    <section class="filter-section">
+      <product-filter
+        [filterNameSelected]="filterNameList"
+        [filterItems]="f.value"
+        [filterList]="filtersSelected[f.key]"
+        [filterName]="f.key"
+        (filterSelected)="itemFilterSelected($event)">
+      </product-filter>
+    </section>
+  </ng-container>
+
+  <!-- Price Range Section -->
+  <section class="filter-section">
+    <h4 class="filter-title">Precio</h4>
+    <app-price-slide (selectedPriceRange)="getPriceRange($event)"></app-price-slide>
+  </section>
+
+  <!-- Extra space for mobile -->
+  <div class="mobile-space" *ngIf="isMobile"></div>
+</div>

@@ -1,48 +1,68 @@
-
-
-  <div *ngIf="data" class="product-item">
-    
-    <div *ngIf="isFavoriteView" (click)="selectFavorite(data._id)">
-      <input type="checkbox" class="favorite-input" [checked]="favoriteSelected.includes(data._id)">
-  
-    </div>
-    <a (click)="routeToDetails(data)" >
-      <!-- <div [hidden]="data.link_img">
-        cagando
-      </div> -->
-      <img [alt]="data.name" [ngStyle]="styles?.img" [src]="data?.link_img" fallback="../../../assets/img/notfound.png" width="50px" height="150px" class="card-img-top" alt="...">
-        <div class="card-body">
-          <span class="card-title" [innerHTML]="changeName(data.name)"></span>
-          <div class="d-flex justify-content-between align-items-center price-box">
-            <div>
-              <div class="list-price" *ngIf="data.list_price != data.price">{{data.list_price == 0 ? "": data.list_price | currency:'COP':'$ ' : '1.0-0'}}</div>
-              <h6 class="price">{{data.price ==0 ? "No disponible": data.price | currency:'COP':'$ ' : '1.0-0'}}</h6>
-  
-            </div>
-            <div class="discount-percent" *ngIf="getDiscount(data.price, data.list_price)!= '' ">{{getDiscount(data.price, data.list_price)}}</div>
-          </div>
-          
-            <p class="card-text">{{data.brand.toUpperCase()}}</p>
-            <!-- <p *ngIf="data.store_name">{{data.store_name}}</p> -->
-            <!-- <div>
-              <img src="../../../assets/img/{{data.store}}.png" height="40" width="40" alt="">
-              
-            </div> -->
-            <div *ngIf="data.store">
-                <img src="../../../assets/img/{{data.store}}.png"  height="40" width="40">
-            </div>
-            <div class="stores">
-  
-              <div *ngFor="let id of data.ids" class="store-img">
-                <img src="../../../assets/img/{{getNameImage(id)}}.png" height="40" width="40" alt="">
-              </div>
-            </div>
-  
-         
-    
-         
-        </div>
-    </a>
+<div *ngIf="data" class="product-card">
+  <!-- Favorite checkbox for favorite view -->
+  <div *ngIf="isFavoriteView" class="favorite-checkbox">
+    <label class="custom-checkbox">
+      <input type="checkbox" [checked]="favoriteSelected.includes(data._id)" (click)="selectFavorite(data._id)">
+      <span class="checkmark">
+        <mat-icon fontIcon="favorite"></mat-icon>
+      </span>
+    </label>
   </div>
   
+  <!-- Discount badge -->
+  <div *ngIf="getDiscount(data.price, data.list_price)!= ''" class="discount-badge">
+    <span>{{getDiscount(data.price, data.list_price)}}</span>
+  </div>
+  
+  <a class="card-link" (click)="routeToDetails(data)">
+    <div class="card-image-container">
+      <img 
+        [alt]="data.name" 
+        [ngStyle]="styles?.img" 
+        [src]="data?.link_img" 
+        fallback="../../../assets/img/notfound.png" 
+        class="card-image"
+      >
+    </div>
+    
+    <div class="card-content">
+      <!-- Product title -->
+      <h3 class="card-title" [innerHTML]="changeName(data.name)"></h3>
+      
+      <!-- Brand -->
+      <div class="card-brand">{{data.brand.toUpperCase()}}</div>
+      
+      <!-- Price section -->
+      <div class="price-container">
+        <div class="price-info">
+          <div *ngIf="data.list_price != data.price" class="original-price">
+            {{data.list_price == 0 ? " ": data.list_price | currency:'COP':'$ ' : '1.0-0'}}
+          </div>
+          <div class="current-price" [ngClass]="{'unavailable': data.price == 0}">
+            {{data.price == 0 ? "No disponible": data.price | currency:'COP':'$ ' : '1.0-0'}}
+          </div>
+        </div>
+      </div>
+      
+      <!-- Store section -->
+      <div class="store-section">
+        <div *ngIf="data.store" class="primary-store">
+          <img src="../../../assets/img/{{data.store}}.png" alt="{{data.store}} store" class="store-logo">
+        </div>
+        
+        <div *ngIf="data.ids?.length > 0" class="other-stores">
+          <div *ngFor="let id of data.ids" class="store-item">
+            <img 
+              src="../../../assets/img/{{getNameImage(id)}}.png" 
+              alt="{{getNameImage(id)}} store" 
+              class="store-logo"
+            >
+          </div>
+        </div>
+      </div>
+
+    
+    </div>
+  </a>
+</div>
 

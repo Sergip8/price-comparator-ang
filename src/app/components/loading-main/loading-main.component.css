@@ -1,0 +1,124 @@
+.loading-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(74, 0, 224, 0.97) 0%, rgba(142, 45, 226, 0.97) 100%);
+    z-index: 9999;
+    
+    &.full-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+  
+  .loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 90%;
+  }
+  
+  .logo-container {
+    margin-bottom: 2rem;
+    
+    .logo {
+      max-width: 180px;
+      height: auto;
+    }
+  }
+  
+  .spinner-container {
+    margin-bottom: 1.5rem;
+  }
+  
+  .spinner {
+    width: 60px;
+    height: 60px;
+    position: relative;
+    margin: 0 auto;
+  }
+  
+  .double-bounce1, .double-bounce2 {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: white;
+    opacity: 0.6;
+    position: absolute;
+    top: 0;
+    left: 0;
+    
+    animation: bounce 2s infinite ease-in-out;
+  }
+  
+  .double-bounce2 {
+    animation-delay: -1.0s;
+  }
+  
+  @keyframes bounce {
+    0%, 100% { 
+      transform: scale(0.0);
+    } 50% { 
+      transform: scale(1.0);
+    }
+  }
+  
+  .loading-message {
+    font-size: 1.2rem;
+    color: white;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-weight: 300;
+    min-height: 1.8rem;
+    transition: opacity 0.5s;
+  }
+  
+  .loading-progress {
+    width: 280px;
+    margin: 0 auto;
+  }
+  
+  .progress-bar {
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background-color: white;
+    border-radius: 3px;
+    width: 0;
+    animation: progress 2.5s ease-in-out infinite;
+  }
+  
+  @keyframes progress {
+    0% {
+      width: 0%;
+    }
+    50% {
+      width: 100%;
+    }
+    100% {
+      width: 0%;
+    }
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 480px) {
+    .logo-container .logo {
+      max-width: 150px;
+    }
+    
+    .loading-message {
+      font-size: 1rem;
+    }
+    
+    .loading-progress {
+      width: 240px;
+    }
+  }
