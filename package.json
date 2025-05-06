@@ -23,7 +23,7 @@
     "@angular/router": "^16.2.8",
     "@popperjs/core": "^2.11.8",
     "@types/google-one-tap": "^1.2.6",
-    "apexcharts": "^3.44.0",
+    "apexcharts": "^3.54.1",
     "bootstrap": "^5.3.1",
     "bootstrap-icons": "^1.10.5",
     "css-loader": "^6.8.1",
