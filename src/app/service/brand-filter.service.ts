@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { TvFilters } from "../models/tv-filters";
 
-const baseUrl = 'http://localhost:8080/api/'
+const baseUrl = 'https://us-east-1.aws.data.mongodb-api.com/app/application-0-pidid/endpoint/'
 @Injectable({
   providedIn: "root",
 })

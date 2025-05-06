@@ -16,7 +16,7 @@ import { TecDataResponse } from "../models/tec-data-response";
     private favoriteSelected = new BehaviorSubject<string[]>([]) 
     favoriteSelected$ = this.favoriteSelected.asObservable()
    
-    baseUrl = environment.apiUrl
+    baseUrl = 'https://us-east-1.aws.data.mongodb-api.com/app/application-0-pidid/endpoint/'
     
   //favorities = new BehaviorSubject<number[]>(this.getFavoriteCookie())
     constructor(private http: HttpClient){}
