@@ -32,7 +32,7 @@
     "ng-apexcharts": "^1.8.0",
     "ngx-drag-scroll": "^16.0.0",
     "ngx-owl-carousel-o": "^16.0.0",
-    "node-sass": "^9.0.0",
+    "sass": "^1.70.0",
     "realm-web": "^2.0.0",
     "rxjs": "~7.5.0",
     "trim-newlines": "^5.0.0",
